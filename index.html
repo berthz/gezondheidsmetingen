@@ -264,6 +264,7 @@ const firebaseConfig = {
   // 👇 plak jouw config hier
     apiKey: "AIzaSyBFSwN7sbLcHojfXQC-GHboUn-sMEX_ysg",
     authDomain: "gezondheidsmetingen.firebaseapp.com",
+	databaseURL: "https://gezondheidsmetingen-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "gezondheidsmetingen",
     storageBucket: "gezondheidsmetingen.firebasestorage.app",
     messagingSenderId: "303121151963",
@@ -457,11 +458,6 @@ function opslaan(){
 
     // formulier resetten
     resetForm();
-
-    // UI verversen
-    toonLijst();
-	toonTabel();
-    tekenGrafiek();
 }
 
 let chart;
@@ -1215,7 +1211,7 @@ function toonDagTabel(){
 
 	// haal behoefte op (laatste meting)
 	let metingen = getData();
-	let laatste = metingen[metingen.length - 1];
+	let laatste = metingen.length ? metingen[metingen.length - 1] : null;
 	let behoefte = laatste ? laatste.kcal || 0 : 0;
 
 	let totaalVerbruik = behoefte + stappenKcal + sportKcal;
@@ -1239,7 +1235,7 @@ function toonDagTabel(){
 			<td>
 				<small>
 				${behoefte} + ${stappenKcal} + ${sportKcal} = ${totaalVerbruik}<br>
-				${d.kcalIn} - ${totaalVerbruik} = <b style="color:${verschil > 0 ? 'green' : 'red'}">${verschil}n</b>
+				${d.kcalIn} - ${totaalVerbruik} = <b style="color:${verschil > 0 ? 'green' : 'red'}">${verschil}</b>
 				</small>
 			</td>
 
