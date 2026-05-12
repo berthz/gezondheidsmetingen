@@ -1172,19 +1172,44 @@ function toonDagTabel(){
     `;
 
     subset.forEach(d => {
-        html += `
-        <tr>
-            <td>${formatDatum(d.datum)}</td>
-            <td>${d.kcalIn}</td>
-            <td>${d.stappen}</td>
-            <td>${d.sport ? "✔" : ""}</td>
-            <td>${Math.round(d.verschil)}</td>
-            <td>
-                <button onclick="bewerkDag('${d.datum}')">✏️</button>
-                <button onclick="verwijderDag('${d.datum}')">🗑️</button>
-            </td>
-        </tr>
-        `;
+	let stappenKcal = Math.round(d.stappen * 0.04);
+	let sportKcal = d.sport ? 450 : 0;
+
+	// haal behoefte op (laatste meting)
+	let metingen = getData();
+	let laatste = metingen[metingen.length - 1];
+	let behoefte = laatste ? laatste.kcal || 0 : 0;
+
+	let totaalVerbruik = behoefte + stappenKcal + sportKcal;
+	let verschil = d.kcalIn - totaalVerbruik;
+		html += `
+		<tr>
+			<td>${formatDatum(d.datum)}</td>
+
+			<td>${d.kcalIn}</td>
+
+			<td>
+				${d.stappen} <br>
+				<small>${stappenKcal} kcal</small>
+			</td>
+
+			<td>
+				${d.sport ? "✔" : "✖"} <br>
+				<small>${sportKcal} kcal</small>
+			</td>
+
+			<td>
+				<small>
+				${behoefte} + ${stappenKcal} + ${sportKcal} = ${totaalVerbruik}<br>
+				${d.kcalIn} - ${totaalVerbruik} = <b style="color:${verschil > 0 ? 'green' : 'red'}">${verschil}</b>
+				</small>
+			</td>
+
+			<td>
+				<button onclick="bewerkDag('${d.datum}')">✏️</button>
+				<button onclick="verwijderDag('${d.datum}')">🗑️</button>
+			</td>
+		</tr>`;
     });
 
     html += "</table>";
