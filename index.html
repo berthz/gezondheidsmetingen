@@ -260,6 +260,7 @@ Selecteer metingen ▼
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
+
 const firebaseConfig = {
   // 👇 plak jouw config hier
     apiKey: "AIzaSyBFSwN7sbLcHojfXQC-GHboUn-sMEX_ysg",
@@ -844,9 +845,6 @@ window.verwijderGeselecteerd = function(){
 
 	remove(ref(db, "metingen/" + item.id));
 
-    toonLijst();
-	toonTabel();
-    tekenGrafiek();
 }
 
 // laden in formulier
@@ -869,13 +867,9 @@ function verwijder(index){
     if(!confirm("Weet je zeker dat je deze meting wilt verwijderen?")) return;
 
     let data = getData();
-    data.splice(index, 1);
+    let item = data[index];
 
-    set(ref(db, "metingen"), data);
-
-    toonLijst();
-	toonTabel();
-    tekenGrafiek();
+    remove(ref(db, "metingen/" + item.id));
 }
 
 toonLijst();
@@ -1031,12 +1025,7 @@ window.bewerkenById = function(id){
 window.verwijderById = function(id){
     if(!confirm("Verwijderen?")) return;
 
-    let data = getData().filter(d => d.id != id);
-    set(ref(db, "metingen"), data);
-
-    toonLijst();
-    toonTabel();
-    tekenGrafiek();
+    remove(ref(db, "metingen/" + id));
 }
 
 function getDoel(){
