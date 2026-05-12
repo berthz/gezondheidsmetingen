@@ -276,6 +276,22 @@ const db = getDatabase(app);
 // test of het werkt
 console.log("Firebase connected");
 
+let firebaseData = [];
+
+onValue(ref(db, "metingen"), (snapshot) => {
+    let data = snapshot.val();
+
+    if(data){
+        firebaseData = Object.values(data);
+    } else {
+        firebaseData = [];
+    }
+
+    console.log("Data uit Firebase:", firebaseData);
+});
+
+console.log(firebaseData);
+
 </script>
 <script>
 let paginaMetingen = 0;
