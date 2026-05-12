@@ -1,6 +1,6 @@
 {
-  "name": "Gezondheidsmetingen",
-  "short_name": "Metingen",
+  "name": "Berts gezondheidsmetingen",
+  "short_name": "Berts metingen",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#f5f6fa",
