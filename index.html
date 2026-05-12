@@ -255,7 +255,28 @@ Selecteer metingen ▼
 	</div>
 
 </div>
+<script type="module">
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const firebaseConfig = {
+  // 👇 plak jouw config hier
+    apiKey: "AIzaSyBFSwN7sbLcHojfXQC-GHboUn-sMEX_ysg",
+    authDomain: "gezondheidsmetingen.firebaseapp.com",
+    projectId: "gezondheidsmetingen",
+    storageBucket: "gezondheidsmetingen.firebasestorage.app",
+    messagingSenderId: "303121151963",
+    appId: "1:303121151963:web:ba93b85a9458e61fd999fe"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// test of het werkt
+console.log("Firebase connected");
+
+</script>
 <script>
 let paginaMetingen = 0;
 const perPagina = 10;
@@ -1201,7 +1222,7 @@ function toonDagTabel(){
 			<td>
 				<small>
 				${behoefte} + ${stappenKcal} + ${sportKcal} = ${totaalVerbruik}<br>
-				${d.kcalIn} - ${totaalVerbruik} = <b style="color:${verschil > 0 ? 'green' : 'red'}">${verschil}</b>
+				${d.kcalIn} - ${totaalVerbruik} = <b style="color:${verschil > 0 ? 'green' : 'red'}">${verschil}n</b>
 				</small>
 			</td>
 
