@@ -1334,6 +1334,10 @@ function berekenVoorspelling(data, totaal){
         `Bij huidig tempo bereik je je doel rond: ${voorspeld}`;
 }
 </script>
-
+<script>
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
+}
+</script>
 </body>
 </html>
