@@ -286,16 +286,15 @@ onValue(ref(db, "metingen"), (snapshot) => {
     } else {
         firebaseData = [];
     }
-toonLijst();
-toonTabel();
-tekenGrafiek();
+	toonLijst();
+	toonTabel();
+	tekenGrafiek();
     console.log("Data uit Firebase:", firebaseData);
 });
 
 console.log(firebaseData);
 
-</script>
-<script>
+
 let paginaMetingen = 0;
 const perPagina = 10;
 let paginaDagen = 0;
