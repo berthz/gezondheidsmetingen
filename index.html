@@ -283,7 +283,7 @@ onValue(ref(db, "metingen"), (snapshot) => {
     let data = snapshot.val();
 
     if(data){
-        firebaseData = Object.values(data);
+        firebaseData = Object.values(data || {});
     } else {
         firebaseData = [];
     }
@@ -432,7 +432,7 @@ function opslaan(){
 
 			let index = data.findIndex(d => d.id == editIndex);
 			if(index !== -1){
-				data[index] = entry;
+				set(ref(db, "metingen/" + entry.id), entry);
 }
         } else {
             // fallback (zou eigenlijk niet moeten gebeuren)
@@ -454,7 +454,7 @@ function opslaan(){
         }
     }
 
-    set(ref(db, "metingen"), data);
+    set(ref(db, "metingen/" + entry.id), entry);
 
     // formulier resetten
     resetForm();
@@ -842,9 +842,9 @@ function verwijderGeselecteerd(){
     let data = getData();
     let item = data[index];
 
-    data = data.filter(d => d.id !== item.id);
+	import { remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-    set(ref(db, "metingen"), data);
+	remove(ref(db, "metingen/" + item.id));
 
     toonLijst();
 	toonTabel();
@@ -1109,7 +1109,7 @@ function slaDagOp(){
 	};
 
     if(index !== -1){
-        data[index] = entry;
+        set(ref(db, "metingen/" + entry.id), entry);
     } else {
         data.push(entry);
     }
