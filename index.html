@@ -258,7 +258,7 @@ Selecteer metingen ▼
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
   // 👇 plak jouw config hier
@@ -354,7 +354,7 @@ updateSelectieLabel();
 }
 
 /* ================= TAB NAVIGATIE ================= */
-function showTab(tab){
+window.showTab = function(tab){
     document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
 
     document.getElementById(tab).style.display="block";
@@ -400,7 +400,7 @@ function getData(){
 }
 
 // opslaan
-function opslaan(){
+window.opslaan = function(){
     let data = getData();
 
     // validatie: datum verplicht
@@ -463,7 +463,7 @@ function opslaan(){
 let chart;
 
 // enkele grafiek
-function tekenGrafiek(){
+window.tekenGrafiek = function(){
     grafiekModus = "single";
 
     let data = getData().sort((a,b) => new Date(a.datum) - new Date(b.datum));
@@ -612,7 +612,7 @@ function tekenCombi(){
 // initialiseren
 tekenGrafiek();
 
-async function exportPDF(){
+window.exportPDF = async function(){
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
@@ -742,7 +742,7 @@ async function exportPDF(){
     doc.save(genereerBestandsnaam());
 }
 
-function mailPDF(){
+window.mailPDF = function(){
     alert("PDF wordt eerst gedownload. Voeg hem daarna toe in je mail.");
 
     exportPDF();
@@ -814,11 +814,11 @@ function toonLijst(){
     });
 }
 
-function selecteerMeting(){
+window.selecteerMeting = function(){
     // nog leeg — kan later preview tonen
 }
 
-function bewerkenGeselecteerd(){
+window.bewerkenGeselecteerd = function(){
     let index = document.getElementById("historieSelect").value;
 
     if(index === ""){
@@ -829,7 +829,7 @@ function bewerkenGeselecteerd(){
     bewerken(parseInt(index));
 }
 
-function verwijderGeselecteerd(){
+window.verwijderGeselecteerd = function(){
     let index = document.getElementById("historieSelect").value;
 
     if(index === ""){
@@ -841,8 +841,6 @@ function verwijderGeselecteerd(){
 
     let data = getData();
     let item = data[index];
-
-	import { remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 	remove(ref(db, "metingen/" + item.id));
 
@@ -882,7 +880,7 @@ function verwijder(index){
 
 toonLijst();
 
-function resetForm(){
+window.resetForm = function(){
     document.getElementById("datum").value = "";
 
     velden.forEach(v => {
@@ -890,7 +888,7 @@ function resetForm(){
     });
 }
 
-function toggleGrafiek(){
+window.toggleGrafiek = function(){
     if(grafiekModus === "single"){
         tekenCombi();
         document.getElementById("combiBtn").innerText = "Toon enkele grafiek";
@@ -901,7 +899,7 @@ function toggleGrafiek(){
 }
 
 
-function toggleSelectie(){
+window.toggleSelectie = function(){
     let div = document.getElementById("combiSelectie");
     let btn = document.getElementById("selectieBtn");
 
@@ -914,7 +912,7 @@ function toggleSelectie(){
     }
 }
 
-function updateSelectieLabel(){
+window.updateSelectieLabel = function(){
     let selected = Array.from(
         document.querySelectorAll("#combiSelectie input:checked")
     );
@@ -942,7 +940,7 @@ function genereerBestandsnaam(){
 
     return `gezondheidsrapport_${jaar}-${maand}-${dag}_${uur}-${minuut}.pdf`;
 }
-function exportData(){
+window.exportData = function(){
     let data = getData();
     let blob = new Blob([JSON.stringify(data)], {type: "application/json"});
     let url = URL.createObjectURL(blob);
@@ -952,7 +950,7 @@ function exportData(){
     a.download = "metingen_backup.json";
     a.click();
 }
-function importData(file){
+window.importData = function(file){
     let reader = new FileReader();
 
     reader.onload = function(e){
@@ -1017,7 +1015,7 @@ function toonTabel(){
     div.innerHTML = html;
 }
 
-function bewerkenById(id){
+window.bewerkenById = function(id){
     let data = getData();
     let item = data.find(d => d.id == id);
 
@@ -1030,7 +1028,7 @@ function bewerkenById(id){
     localStorage.setItem("editIndex", String(item.id));
 }
 
-function verwijderById(id){
+window.verwijderById = function(id){
     if(!confirm("Verwijderen?")) return;
 
     let data = getData().filter(d => d.id != id);
@@ -1045,7 +1043,7 @@ function getDoel(){
     return JSON.parse(localStorage.getItem("doel") || "{}");
 }
 
-function slaDoelOp(){
+window.slaDoelOp = function(){
     let kg = parseFloat(document.getElementById("doelKg").value);
     if(isNaN(kg)) return alert("Vul kg in");
 
@@ -1065,7 +1063,7 @@ function getDagData(){
     return JSON.parse(localStorage.getItem("dagData") || "[]");
 }
 
-function slaDagOp(){
+window.slaDagOp = function(){
 
     let data = getDagData();
 
@@ -1264,7 +1262,7 @@ function toonDagTabel(){
     div.innerHTML = html;
 }
 
-function bewerkDag(datum){
+window.bewerkDag = function(datum){
 
     let data = getDagData();
     let d = data.find(x => x.datum === datum);
@@ -1277,7 +1275,7 @@ function bewerkDag(datum){
     document.getElementById("sport").checked = d.sport;
 }
 
-function verwijderDag(datum){
+window.verwijderDag = function(datum){
 
     if(!confirm("Verwijderen?")) return;
 
