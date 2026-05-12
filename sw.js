@@ -1,17 +1,10 @@
-const CACHE_NAME = "app-cache-v3"; // 👈 verhoog bij updates
+const CACHE_NAME = "app-cache-v4"; // 👈 verhoog bij updates
 
-const URLS_TO_CACHE = [
-    "/",
-    "/index.html",
-    "/manifest.json"
-];
 
 // installeren
 self.addEventListener("install", event => {
     self.skipWaiting();
-    event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => cache.addAll(URLS_TO_CACHE))
-    );
+    event.waitUntil(Promise.resolve());
 });
 
 // activeren
