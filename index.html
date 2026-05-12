@@ -286,7 +286,9 @@ onValue(ref(db, "metingen"), (snapshot) => {
     } else {
         firebaseData = [];
     }
-
+toonLijst();
+toonTabel();
+tekenGrafiek();
     console.log("Data uit Firebase:", firebaseData);
 });
 
@@ -394,7 +396,7 @@ const labels = [
 
 // data ophalen
 function getData(){
-    return JSON.parse(localStorage.getItem("metingen") || "[]");
+    return firebaseData;
 }
 
 // opslaan
@@ -452,7 +454,7 @@ function opslaan(){
         }
     }
 
-    localStorage.setItem("metingen", JSON.stringify(data));
+    set(ref(db, "metingen"), data);
 
     // formulier resetten
     resetForm();
@@ -847,7 +849,7 @@ function verwijderGeselecteerd(){
 
     data = data.filter(d => d.id !== item.id);
 
-    localStorage.setItem("metingen", JSON.stringify(data));
+    set(ref(db, "metingen"), data);
 
     toonLijst();
 	toonTabel();
@@ -876,7 +878,7 @@ function verwijder(index){
     let data = getData();
     data.splice(index, 1);
 
-    localStorage.setItem("metingen", JSON.stringify(data));
+    set(ref(db, "metingen"), data);
 
     toonLijst();
 	toonTabel();
@@ -960,7 +962,7 @@ function importData(file){
 
     reader.onload = function(e){
         let data = JSON.parse(e.target.result);
-        localStorage.setItem("metingen", JSON.stringify(data));
+        set(ref(db, "metingen"), data);
         toonLijst();
         tekenGrafiek();
     };
@@ -1037,7 +1039,7 @@ function verwijderById(id){
     if(!confirm("Verwijderen?")) return;
 
     let data = getData().filter(d => d.id != id);
-    localStorage.setItem("metingen", JSON.stringify(data));
+    set(ref(db, "metingen"), data);
 
     toonLijst();
     toonTabel();
