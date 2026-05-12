@@ -276,7 +276,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // test of het werkt
-console.log("Firebase connected");
+//console.log("Firebase connected");
 
 let firebaseData = [];
 
@@ -291,10 +291,27 @@ onValue(ref(db, "metingen"), (snapshot) => {
 	toonLijst();
 	toonTabel();
 	tekenGrafiek();
-    console.log("Data uit Firebase:", firebaseData);
+    //console.log("Data uit Firebase:", firebaseData);
 });
 
-console.log(firebaseData);
+onValue(ref(db, "doel"), (snapshot) => {
+    doelData = snapshot.val() || {};
+    updateDoelUI();
+});
+
+onValue(ref(db, "dagData"), (snapshot) => {
+    let data = snapshot.val();
+
+    if(data){
+        dagDataFirebase = Object.values(data);
+    } else {
+        dagDataFirebase = [];
+    }
+
+    toonDagTabel();
+    updateDoelUI();
+});
+//console.log(firebaseData);
 
 
 let paginaMetingen = 0;
@@ -1028,8 +1045,9 @@ window.verwijderById = function(id){
     remove(ref(db, "metingen/" + id));
 }
 
+let doelData = {};
 function getDoel(){
-    return JSON.parse(localStorage.getItem("doel") || "{}");
+    return doelData;
 }
 
 window.slaDoelOp = function(){
@@ -1043,15 +1061,16 @@ window.slaDoelOp = function(){
         kcal: kcal
     };
 
-    localStorage.setItem("doel", JSON.stringify(doel));
+    set(ref(db, "doel"), doel);
 
     updateDoelUI();
 }
 
-function getDagData(){
-    return JSON.parse(localStorage.getItem("dagData") || "[]");
-}
+let dagDataFirebase = [];
 
+function getDagData(){
+    return dagDataFirebase;
+}
 window.slaDagOp = function(){
 
     let data = getDagData();
@@ -1096,12 +1115,12 @@ window.slaDagOp = function(){
 	};
 
     if(index !== -1){
-        set(ref(db, "metingen/" + entry.id), entry);
+		set(ref(db, "dagData/" + datum), entry);
     } else {
         data.push(entry);
     }
 
-    localStorage.setItem("dagData", JSON.stringify(data));
+    set(ref(db, "dagData/" + datum), entry);
 
     updateDoelUI();
     toonDagTabel();
@@ -1270,7 +1289,7 @@ window.verwijderDag = function(datum){
 
     let data = getDagData().filter(d => d.datum !== datum);
 
-    localStorage.setItem("dagData", JSON.stringify(data));
+    remove(ref(db, "dagData/" + datum));
 
     updateDoelUI();
     toonDagTabel();
