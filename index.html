@@ -257,7 +257,7 @@ Selecteer metingen ▼
 </div>
 <script type="module">
 let currentUser = null;
-if (!currentUser) return;
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } 
@@ -290,6 +290,7 @@ window.login = function(){
 }
 onAuthStateChanged(auth, (user) => {
 currentUser = user;
+if (!currentUser) return;
 
     if (user) {
         console.log("User UID:", user.uid);
