@@ -127,7 +127,7 @@ table.compact tr:nth-child(even) {
 <body>
 
 <header>Gezondheidsmetingen</header>
-
+<button onclick="login()">Login met Google</button>
 <div class="tabs">
     <button onclick="showTab('metingen')" id="tabBtnMetingen">Metingen</button>
     <button onclick="showTab('analyse')" id="tabBtnAnalyse">Analyse</button>
@@ -259,7 +259,8 @@ Selecteer metingen ▼
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
-
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
   // 👇 plak jouw config hier
@@ -274,7 +275,25 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
+window.login = function(){
+    signInWithPopup(auth, provider)
+        .then(result => {
+            console.log("Ingelogd:", result.user);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log("User UID:", user.uid);
+    } else {
+        console.log("Niet ingelogd");
+    }
+});
 // test of het werkt
 //console.log("Firebase connected");
 
