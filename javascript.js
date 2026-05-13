@@ -983,6 +983,9 @@ function updateDoelUI(){
 
     let doel = getDoel();
     let data = getDagData();
+	if(!doel || Object.keys(doel).length === 0) return;
+	if(!data) return;
+	
     if(doel.kg){
         document.getElementById("doelKg").value = doel.kg;
     }
@@ -1005,6 +1008,8 @@ function updateDoelUI(){
 	tekenTrendGrafiek();
 	updateInzichten();
 }
+console.log("Doel:", doel);
+console.log("Dagdata:", data.length);
 
 let doelChart;
 
