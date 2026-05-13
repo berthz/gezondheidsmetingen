@@ -308,19 +308,40 @@ onAuthStateChanged(auth, (user) => {
     currentUser = user;
 
     if (user) {
-        console.log("Ingelogd:", userName);
 
         userName = user.displayName || user.email;
-		document.getElementById("userInfo").innerText = userName;
 
+        document.getElementById("userInfo").innerText = userName;
         document.getElementById("loginBtn").style.display = "none";
         document.getElementById("logoutBtn").style.display = "inline-block";
 
+        console.log("Ingelogd:", userName);
+
+        // 🔥 METINGEN
+        onValue(ref(db, "metingen/" + user.uid), (snapshot) => {
+            let data = snapshot.val();
+            firebaseData = data ? Object.values(data) : [];
+            toonLijst();
+            toonTabel();
+            tekenGrafiek();
+        });
+
+        // 🔥 DOEL
+        onValue(ref(db, "doel/" + user.uid), (snapshot) => {
+            doelData = snapshot.val() || {};
+            updateDoelUI();
+        });
+
+        // 🔥 DAGDATA
+        onValue(ref(db, "dagData/" + user.uid), (snapshot) => {
+            let data = snapshot.val();
+            dagDataFirebase = data ? Object.values(data) : [];
+            toonDagTabel();
+            updateDoelUI();
+        });
+
     } else {
-        console.log("Niet ingelogd");
-
         document.getElementById("userInfo").innerText = "";
-
         document.getElementById("loginBtn").style.display = "inline-block";
         document.getElementById("logoutBtn").style.display = "none";
     }
@@ -329,41 +350,6 @@ onAuthStateChanged(auth, (user) => {
 //console.log("Firebase connected");
 
 let firebaseData = [];
-
-onValue(ref(db, "metingen"), (snapshot) => {
-    let data = snapshot.val();
-
-    if(data){
-        firebaseData = Object.values(data || {});
-    } else {
-        firebaseData = [];
-    }
-	toonLijst();
-	toonTabel();
-	tekenGrafiek();
-    //console.log("Data uit Firebase:", firebaseData);
-});
-
-onValue(ref(db, "doel"), (snapshot) => {
-    doelData = snapshot.val() || {};
-    updateDoelUI();
-});
-
-onValue(ref(db, "dagData"), (snapshot) => {
-    let data = snapshot.val();
-
-    if(data){
-        dagDataFirebase = Object.values(data);
-    } else {
-        dagDataFirebase = [];
-    }
-
-    toonDagTabel();
-    updateDoelUI();
-});
-//console.log(firebaseData);
-
-
 let paginaMetingen = 0;
 const perPagina = 10;
 let paginaDagen = 0;
@@ -469,6 +455,7 @@ function getData(){
 
 // opslaan
 window.opslaan = function(){
+	if (!currentUser) return;
     let data = getData();
 
     // validatie: datum verplicht
@@ -500,7 +487,7 @@ window.opslaan = function(){
 
 			let index = data.findIndex(d => d.id == editIndex);
 			if(index !== -1){
-				set(ref(db, "metingen/" + entry.id), entry);
+				set(ref(db, "metingen/" + currentUser.uid + "/" + entry.id), entry);
 }
         } else {
             // fallback (zou eigenlijk niet moeten gebeuren)
@@ -522,7 +509,7 @@ window.opslaan = function(){
         }
     }
 
-    set(ref(db, "metingen/" + entry.id), entry);
+    set(ref(db, "metingen/" + currentUser.uid + "/" + entry.id), entry);
 
     // formulier resetten
     resetForm();
@@ -898,6 +885,7 @@ window.bewerkenGeselecteerd = function(){
 }
 
 window.verwijderGeselecteerd = function(){
+	if (!currentUser) return;
     let index = document.getElementById("historieSelect").value;
 
     if(index === ""){
@@ -910,7 +898,7 @@ window.verwijderGeselecteerd = function(){
     let data = getData();
     let item = data[index];
 
-	remove(ref(db, "metingen/" + item.id));
+	remove(ref(db, "metingen/" + currentUser.uid + "/" + item.id));
 
 }
 
@@ -931,12 +919,13 @@ function bewerken(index){
 
 // verwijderen
 function verwijder(index){
+	if (!currentUser) return;
     if(!confirm("Weet je zeker dat je deze meting wilt verwijderen?")) return;
 
     let data = getData();
     let item = data[index];
 
-    remove(ref(db, "metingen/" + item.id));
+    remove(ref(db, "metingen/" + currentUser.uid + "/" + item.id));
 }
 
 toonLijst();
@@ -1012,11 +1001,12 @@ window.exportData = function(){
     a.click();
 }
 window.importData = function(file){
+	if (!currentUser) return;
     let reader = new FileReader();
 
     reader.onload = function(e){
         let data = JSON.parse(e.target.result);
-        set(ref(db, "metingen"), data);
+        set(ref(db, "metingen/" + currentUser.uid), data);
         toonLijst();
         tekenGrafiek();
     };
@@ -1090,9 +1080,10 @@ window.bewerkenById = function(id){
 }
 
 window.verwijderById = function(id){
+	if (!currentUser) return;
     if(!confirm("Verwijderen?")) return;
 
-    remove(ref(db, "metingen/" + id));
+    remove(ref(db, "metingen/" + currentUser.uid + "/" + id));
 }
 
 let doelData = {};
@@ -1101,6 +1092,7 @@ function getDoel(){
 }
 
 window.slaDoelOp = function(){
+	if (!currentUser) return;
     let kg = parseFloat(document.getElementById("doelKg").value);
     if(isNaN(kg)) return alert("Vul kg in");
 
@@ -1111,7 +1103,7 @@ window.slaDoelOp = function(){
         kcal: kcal
     };
 
-    set(ref(db, "doel"), doel);
+    set(ref(db, "doel/" + currentUser.uid), doel);
 
     updateDoelUI();
 }
@@ -1122,7 +1114,7 @@ function getDagData(){
     return dagDataFirebase;
 }
 window.slaDagOp = function(){
-
+	if (!currentUser) return;
     let data = getDagData();
 
     let datum = document.getElementById("doelDatum").value;
@@ -1165,12 +1157,12 @@ window.slaDagOp = function(){
 	};
 
     if(index !== -1){
-		set(ref(db, "dagData/" + datum), entry);
+		set(ref(db, "dagData/" + currentUser.uid + "/" + datum), entry);
     } else {
         data.push(entry);
     }
 
-    set(ref(db, "dagData/" + datum), entry);
+    set(ref(db, "dagData/" + currentUser.uid + "/" + datum), entry);
 
     updateDoelUI();
     toonDagTabel();
@@ -1334,12 +1326,12 @@ window.bewerkDag = function(datum){
 }
 
 window.verwijderDag = function(datum){
-
+	if (!currentUser) return;
     if(!confirm("Verwijderen?")) return;
 
     let data = getDagData().filter(d => d.datum !== datum);
 
-    remove(ref(db, "dagData/" + datum));
+    remove(ref(db, "dagData/" + currentUser.uid + "/" + datum));
 
     updateDoelUI();
     toonDagTabel();
