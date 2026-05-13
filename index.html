@@ -527,9 +527,10 @@ window.opslaan = function(){
 
     // formulier resetten
     resetForm();
-    setTimeout(() => {
-        isSaving = false;
-    }, 800);
+	setTimeout(() => {
+		isSaving = false;
+		btn.disabled = false;
+	}, 800);
 }
 
 let chart;
