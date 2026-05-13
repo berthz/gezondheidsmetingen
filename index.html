@@ -310,7 +310,7 @@ onAuthStateChanged(auth, (user) => {
     currentUser = user;
 
     if (user) {
-
+		syncOfflineData();
         userName = user.displayName || user.email;
 		document.body.style.display = "block";
         document.getElementById("userInfo").innerText = userName;
@@ -451,7 +451,27 @@ const labels = [
 ];
 
 
+function saveOffline(entry){
+    let queue = JSON.parse(localStorage.getItem("offlineQueue") || "[]");
+    queue.push(entry);
+    localStorage.setItem("offlineQueue", JSON.stringify(queue));
+}
 
+function syncOfflineData(){
+    if (!currentUser) return;
+
+    let queue = JSON.parse(localStorage.getItem("offlineQueue") || "[]");
+
+    if(queue.length === 0) return;
+
+    console.log("Syncing offline data:", queue.length);
+
+    queue.forEach(entry => {
+        set(ref(db, "metingen/" + currentUser.uid + "/" + entry.id), entry);
+    });
+
+    localStorage.removeItem("offlineQueue");
+}
 // data ophalen
 function getData(){
     return firebaseData;
@@ -490,40 +510,34 @@ window.opslaan = function(){
 
     let editIndex = localStorage.getItem("editIndex");
 
-    if(editIndex !== null){
-        editIndex = parseInt(editIndex);
+	if(editIndex !== null){
+		editIndex = parseInt(editIndex);
 
-        if(!isNaN(editIndex)){
-            // bestaande entry overschrijven
-            entry.id = editIndex; // behoud zelfde ID
+		if(!isNaN(editIndex)){
+			// bestaande entry overschrijven
+			entry.id = editIndex; // behoud zelfde ID
+		}
 
-			let index = data.findIndex(d => d.id == editIndex);
-			if(index !== -1){
-				set(ref(db, "metingen/" + currentUser.uid + "/" + entry.id), entry);
-}
-        } else {
-            // fallback (zou eigenlijk niet moeten gebeuren)
-            data.push(entry);
-        }
+		localStorage.removeItem("editIndex");
 
-        localStorage.removeItem("editIndex");
+	} else {
+		// 🔒 voorkom dubbele invoer (zelfde datum)
+		let bestaatAl = data.some(d => d.datum === datum);
 
-    } else {
-        // 🔒 voorkom dubbele invoer (zelfde datum)
-        let bestaatAl = data.some(d => d.datum === datum);
-
-        if(bestaatAl){
+		if(bestaatAl){
 			alert("Er bestaat al een meting op deze datum");
 			isSaving = false;
 			btn.disabled = false;
 			return;
-		} 
-		else {
-            data.push(entry);
-        }
-    }
+		}
+	}
 
+    if (navigator.onLine) {
     set(ref(db, "metingen/" + currentUser.uid + "/" + entry.id), entry);
+	} else {
+		console.log("Offline opgeslagen");
+		saveOffline(entry);
+	}
 
     // formulier resetten
     resetForm();
@@ -1489,8 +1503,12 @@ function berekenVoorspelling(data, totaal){
     document.getElementById("voorspelling").innerText =
         `Bij huidig tempo bereik je je doel rond: ${voorspeld}`;
 }
-</script>
-<script>
+
+window.addEventListener("online", () => {
+    console.log("Weer online → sync starten");
+    syncOfflineData();
+});
+
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").then(reg => {
         reg.update();
