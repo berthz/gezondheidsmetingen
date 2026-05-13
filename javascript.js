@@ -1,6 +1,8 @@
 let currentUser = null;
 let userName = "";
 let isSaving = false;
+let doelChart;
+let trendChart;
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -1008,10 +1010,10 @@ function updateDoelUI(){
 	tekenTrendGrafiek();
 	updateInzichten();
 }
-console.log("Doel:", doel);
-console.log("Dagdata:", data.length);
+//console.log("Doel:", doel);
+//console.log("Dagdata:", data.length);
 
-let doelChart;
+
 
 function tekenDoelGrafiek(procent){
 
@@ -1153,8 +1155,6 @@ window.verwijderDag = function(datum){
     updateDoelUI();
     toonDagTabel();
 }
-
-let trendChart;
 
 function tekenTrendGrafiek(){
 
