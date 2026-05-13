@@ -1009,8 +1009,6 @@ function updateDoelUI(){
     tekenDoelGrafiek(procent);
 	tekenTrendGrafiek();
 	updateInzichten();
-	console.log("Doel:", doel);
-	console.log("Dagdata:", data.length);
 }
 
 
