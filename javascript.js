@@ -1009,9 +1009,9 @@ function updateDoelUI(){
     tekenDoelGrafiek(procent);
 	tekenTrendGrafiek();
 	updateInzichten();
+	console.log("Doel:", doel);
+	console.log("Dagdata:", data.length);
 }
-console.log("Doel:", doel);
-console.log("Dagdata:", data.length);
 
 
 
@@ -1420,7 +1420,21 @@ window.importExcel = function(file){
             // toevoegen / updaten
             dagData.forEach(entry => {
                 if(entry.datum){
-                    set(ref(db, "dagData/" + currentUser.uid + "/" + entry.datum), entry);
+                    let metingen = getData();
+					let laatste = metingen.length ? metingen[metingen.length - 1] : null;
+					let behoefte = laatste?.kcal || 2000;
+
+					let sportKcal = entry.sport ? 450 : 0;
+					let stappenKcal = (entry.stappen || 0) * 0.04;
+
+					let totaalVerbruik = behoefte + sportKcal + stappenKcal;
+					let verschil = (entry.kcalIn || 0) - totaalVerbruik;
+
+					entry.behoefte = behoefte;
+					entry.totaalVerbruik = totaalVerbruik;
+					entry.verschil = verschil;
+
+					set(ref(db, "dagData/" + currentUser.uid + "/" + entry.datum), entry);
                 }
             });
 
