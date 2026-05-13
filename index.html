@@ -100,8 +100,6 @@ Selecteer metingen ▼
 <input type="file" onchange="importData(this.files[0])">
 
 <div class="excel-actions">
-    <button onclick="exportExcel()">Export Excel</button>
-
     <span class="info-icon">
         ℹ️
         <span class="tooltip">
@@ -117,11 +115,10 @@ Selecteer metingen ▼
             Datum formaat: YYYY-MM-DD
         </span>
     </span>
+	<button onclick="exportExcel()">Export Excel</button>
 </div>
 
 <div class="excel-actions">
-    <input type="file" onchange="importExcel(this.files[0])">
-
     <span class="info-icon">
         ℹ️
         <span class="tooltip">
@@ -133,6 +130,7 @@ Selecteer metingen ▼
             Datum formaat: YYYY-MM-DD
         </span>
     </span>
+	<input type="file" onchange="importExcel(this.files[0])">
 </div>
 </div>
 
