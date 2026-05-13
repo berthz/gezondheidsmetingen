@@ -99,20 +99,41 @@ Selecteer metingen ▼
 <button onclick="exportData()">Export data</button>
 <input type="file" onchange="importData(this.files[0])">
 
-<button onclick="exportExcel()" title="Exporteer alle metingen en dagdata naar Excel. 
-Kolommen Metingen: datum, gewicht, bmi, lichaamsvrij_vet, waterpercentage, spiermassa, spierscore, botmassa, kcal, kj, leeftijd, visceraal_vet, buikomvang.
-Kolommen Dagdata: datum, kcalIn, stappen, sport.
-Gebruik datum formaat: YYYY-MM-DD.">
-    Export Excel
-</button>
+<div class="excel-actions">
+    <button onclick="exportExcel()">Export Excel</button>
 
-<input type="file" 
-       title="Importeer Excel bestand met dezelfde kolommen.
-- datum = verplicht (YYYY-MM-DD)
-- bestaande datum = update
-- nieuwe datum = nieuwe entry
-- ontbrekende datum = wordt verwijderd"
-       onchange="importExcel(this.files[0])">
+    <span class="info-icon">
+        ℹ️
+        <span class="tooltip">
+            Exporteer alle metingen en dagdata naar Excel.<br><br>
+            <b>Metingen:</b><br>
+            datum, gewicht, bmi, lichaamsvrij_vet, waterpercentage,
+            spiermassa, spierscore, botmassa, kcal, kj, leeftijd,
+            visceraal_vet, buikomvang<br><br>
+
+            <b>Dagdata:</b><br>
+            datum, kcalIn, stappen, sport<br><br>
+
+            Datum formaat: YYYY-MM-DD
+        </span>
+    </span>
+</div>
+
+<div class="excel-actions">
+    <input type="file" onchange="importExcel(this.files[0])">
+
+    <span class="info-icon">
+        ℹ️
+        <span class="tooltip">
+            Importeer Excel bestand.<br><br>
+            - datum verplicht<br>
+            - bestaande datum = update<br>
+            - nieuwe datum = toevoegen<br>
+            - ontbrekende datum = verwijderen<br><br>
+            Datum formaat: YYYY-MM-DD
+        </span>
+    </span>
+</div>
 </div>
 
 </div>

@@ -128,3 +128,41 @@ table.compact tr:nth-child(even) {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+.excel-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.info-icon {
+    position: relative;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.tooltip {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    position: absolute;
+    top: 120%;
+    left: 0;
+
+    background: #333;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    width: 260px;
+
+    font-size: 12px;
+    line-height: 1.4;
+    z-index: 1000;
+}
+
+.info-icon:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
