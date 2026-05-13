@@ -1313,11 +1313,34 @@ window.exportExcel = function(){
     let wb = XLSX.utils.book_new();
 
     // 📊 Sheet 1: Metingen
-    let ws1 = XLSX.utils.json_to_sheet(metingen);
+    let metingenFormatted = metingen.map(m => ({
+    datum: m.datum,
+    gewicht: m.gewicht,
+    bmi: m.bmi,
+    lichaamsvrij_vet: m.lichaamsvrij_vet,
+    waterpercentage: m.waterpercentage,
+    spiermassa: m.spiermassa,
+    spierscore: m.spierscore,
+    botmassa: m.botmassa,
+    kcal: m.kcal,
+    kj: m.kj,
+    leeftijd: m.leeftijd,
+    visceraal_vet: m.visceraal_vet,
+    buikomvang: m.buikomvang
+	}));
+
+	let ws1 = XLSX.utils.json_to_sheet(metingenFormatted);
     XLSX.utils.book_append_sheet(wb, ws1, "Metingen");
 
     // 📊 Sheet 2: Dagdata
-    let ws2 = XLSX.utils.json_to_sheet(dagData);
+    let dagFormatted = dagData.map(d => ({
+    datum: d.datum,
+    kcalIn: d.kcalIn,
+    stappen: d.stappen,
+    sport: d.sport
+	}));
+
+	let ws2 = XLSX.utils.json_to_sheet(dagFormatted);
     XLSX.utils.book_append_sheet(wb, ws2, "Dagdata");
 
     XLSX.writeFile(wb, "gezondheidsdata.xlsx");
