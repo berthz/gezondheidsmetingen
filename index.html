@@ -151,7 +151,7 @@ table.compact tr:nth-child(even) {
 
 <div id="inputs" class="grid"></div>
 
-<button class="primary" onclick="opslaan()">Opslaan</button>
+<button id="opslaanBtn" class="primary" onclick="opslaan()">Opslaan</button>
 <button class="secondary" onclick="resetForm()">Reset</button>
 </div>
 
@@ -265,6 +265,7 @@ Selecteer metingen ▼
 <script type="module">
 let currentUser = null;
 let userName = "";
+let isSaving = false;
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -459,12 +460,20 @@ function getData(){
 // opslaan
 window.opslaan = function(){
 	if (!currentUser) return;
+	
+	if (isSaving) return; // 🔒 blokkeer dubbel klikken
+    isSaving = true;
+	let btn = document.getElementById("opslaanBtn");
+	btn.disabled = true;
+	
     let data = getData();
 
     // validatie: datum verplicht
     let datum = document.getElementById("datum").value;
     if(!datum){
         alert("Vul een datum in");
+		isSaving = false;
+		btn.disabled = false;
         return;
     }
 
@@ -505,6 +514,8 @@ window.opslaan = function(){
 
         if(bestaatAl){
 			alert("Er bestaat al een meting op deze datum");
+			isSaving = false;
+			btn.disabled = false;
 			return;
 		} 
 		else {
@@ -516,6 +527,9 @@ window.opslaan = function(){
 
     // formulier resetten
     resetForm();
+    setTimeout(() => {
+        isSaving = false;
+    }, 800);
 }
 
 let chart;
@@ -1117,6 +1131,8 @@ function getDagData(){
     return dagDataFirebase;
 }
 window.slaDagOp = function(){
+	if (isSaving) return;
+	isSaving = true;
 	if (!currentUser) return;
     let data = getDagData();
 
@@ -1169,6 +1185,10 @@ window.slaDagOp = function(){
 
     updateDoelUI();
     toonDagTabel();
+	
+	setTimeout(() => {
+    isSaving = false;
+}, 800);
 }
 
 function updateDoelUI(){
