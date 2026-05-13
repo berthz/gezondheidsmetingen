@@ -1332,31 +1332,79 @@ window.importExcel = function(file){
         let data = new Uint8Array(e.target.result);
         let workbook = XLSX.read(data, { type: "array" });
 
-        // Metingen
+        // ===== METINGEN =====
         let metingenSheet = workbook.Sheets["Metingen"];
+
         if(metingenSheet){
+
             let metingen = XLSX.utils.sheet_to_json(metingenSheet);
 
+            // 🔹 bestaande data ophalen
+            let bestaandeData = getData();
+
+            // 🔹 map op datum → bestaande entry
+            let bestaandeMap = {};
+            bestaandeData.forEach(d => {
+                bestaandeMap[d.datum] = d;
+            });
+
+            // 🔹 bijhouden welke datums nog bestaan
+            let nieuweDatums = metingen.map(m => m.datum);
+
+            // ===== TOEVOEGEN / UPDATEN =====
             metingen.forEach(entry => {
-                if(entry.id){
-                    set(ref(db, "metingen/" + currentUser.uid + "/" + entry.id), entry);
+
+                if(!entry.datum) return;
+
+                // bestaat al?
+                let bestaand = bestaandeMap[entry.datum];
+
+                if(bestaand){
+                    // 🔁 update → behoud ID
+                    entry.id = bestaand.id;
+                } else {
+                    // 🆕 nieuw → nieuwe ID
+                    entry.id = Date.now() + Math.floor(Math.random()*1000);
+                }
+
+                set(ref(db, "metingen/" + currentUser.uid + "/" + entry.id), entry);
+            });
+
+            // ===== VERWIJDEREN =====
+            bestaandeData.forEach(d => {
+                if(!nieuweDatums.includes(d.datum)){
+                    remove(ref(db, "metingen/" + currentUser.uid + "/" + d.id));
                 }
             });
         }
 
-        // Dagdata
+        // ===== DAGDATA =====
         let dagSheet = workbook.Sheets["Dagdata"];
+
         if(dagSheet){
+
             let dagData = XLSX.utils.sheet_to_json(dagSheet);
 
+            let bestaande = getDagData();
+            let bestaandeDatums = bestaande.map(d => d.datum);
+            let nieuweDatums = dagData.map(d => d.datum);
+
+            // toevoegen / updaten
             dagData.forEach(entry => {
                 if(entry.datum){
                     set(ref(db, "dagData/" + currentUser.uid + "/" + entry.datum), entry);
                 }
             });
+
+            // verwijderen
+            bestaande.forEach(d => {
+                if(!nieuweDatums.includes(d.datum)){
+                    remove(ref(db, "dagData/" + currentUser.uid + "/" + d.datum));
+                }
+            });
         }
 
-        alert("Import voltooid");
+        alert("Import voltooid (sync met Excel)");
     };
 
     reader.readAsArrayBuffer(file);
