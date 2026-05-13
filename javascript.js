@@ -1010,8 +1010,8 @@ function updateDoelUI(){
 	tekenTrendGrafiek();
 	updateInzichten();
 }
-//console.log("Doel:", doel);
-//console.log("Dagdata:", data.length);
+console.log("Doel:", doel);
+console.log("Dagdata:", data.length);
 
 
 
