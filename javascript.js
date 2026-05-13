@@ -1300,6 +1300,70 @@ function updateInzichten(){
     `;
 }
 
+window.exportExcel = function(){
+
+    let metingen = getData();
+    let dagData = getDagData();
+
+    if(metingen.length === 0 && dagData.length === 0){
+        alert("Geen data om te exporteren");
+        return;
+    }
+
+    let wb = XLSX.utils.book_new();
+
+    // 📊 Sheet 1: Metingen
+    let ws1 = XLSX.utils.json_to_sheet(metingen);
+    XLSX.utils.book_append_sheet(wb, ws1, "Metingen");
+
+    // 📊 Sheet 2: Dagdata
+    let ws2 = XLSX.utils.json_to_sheet(dagData);
+    XLSX.utils.book_append_sheet(wb, ws2, "Dagdata");
+
+    XLSX.writeFile(wb, "gezondheidsdata.xlsx");
+}
+
+window.importExcel = function(file){
+    if (!currentUser) return;
+
+    let reader = new FileReader();
+
+    reader.onload = function(e){
+        let data = new Uint8Array(e.target.result);
+        let workbook = XLSX.read(data, { type: "array" });
+
+        // Metingen
+        let metingenSheet = workbook.Sheets["Metingen"];
+        if(metingenSheet){
+            let metingen = XLSX.utils.sheet_to_json(metingenSheet);
+
+            metingen.forEach(entry => {
+                if(entry.id){
+                    set(ref(db, "metingen/" + currentUser.uid + "/" + entry.id), entry);
+                }
+            });
+        }
+
+        // Dagdata
+        let dagSheet = workbook.Sheets["Dagdata"];
+        if(dagSheet){
+            let dagData = XLSX.utils.sheet_to_json(dagSheet);
+
+            dagData.forEach(entry => {
+                if(entry.datum){
+                    set(ref(db, "dagData/" + currentUser.uid + "/" + entry.datum), entry);
+                }
+            });
+        }
+
+        alert("Import voltooid");
+    };
+
+    reader.readAsArrayBuffer(file);
+}
+
+// Laatste code. Alles hieronder updated eventuele lokaal opgeslagen code.
+
 window.addEventListener("online", () => {
     console.log("Weer online → sync starten");
     syncOfflineData();
