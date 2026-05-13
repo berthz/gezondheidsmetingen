@@ -127,7 +127,13 @@ table.compact tr:nth-child(even) {
 <body>
 
 <header>Gezondheidsmetingen</header>
-<button id="loginBtn" onclick="login()">Login met Google</button>
+
+<div id="authBar" style="padding:10px;">
+    <span id="userInfo"></span>
+    <button id="loginBtn" onclick="login()">Login</button>
+    <button id="logoutBtn" onclick="logout()" style="display:none;">Logout</button>
+</div>
+
 <div class="tabs">
     <button onclick="showTab('metingen')" id="tabBtnMetingen">Metingen</button>
     <button onclick="showTab('analyse')" id="tabBtnAnalyse">Analyse</button>
@@ -257,10 +263,11 @@ Selecteer metingen ▼
 </div>
 <script type="module">
 let currentUser = null;
+let userName = "";
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } 
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } 
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -288,25 +295,34 @@ window.login = function(){
             console.error(error);
         });
 }
+window.logout = function(){
+    signOut(auth)
+        .then(() => {
+            console.log("Uitgelogd");
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
 onAuthStateChanged(auth, (user) => {
-currentUser = user;
-if (!currentUser) return;
+    currentUser = user;
 
     if (user) {
-        console.log("User UID:", user.uid);
+        console.log("Ingelogd:", userName);
 
-        // app tonen
-        document.body.style.display = "block";
-		document.getElementById("loginBtn").style.display = "none";
+        userName = user.displayName || user.email;
+		document.getElementById("userInfo").innerText = userName;
+
+        document.getElementById("loginBtn").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "inline-block";
 
     } else {
         console.log("Niet ingelogd");
 
-        // app verbergen
-        document.body.style.display = "none";
-		document.getElementById("loginBtn").style.display = "block";
+        document.getElementById("userInfo").innerText = "";
 
-        alert("Log eerst in om de app te gebruiken");
+        document.getElementById("loginBtn").style.display = "inline-block";
+        document.getElementById("logoutBtn").style.display = "none";
     }
 });
 // test of het werkt
