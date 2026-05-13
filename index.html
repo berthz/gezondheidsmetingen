@@ -15,6 +15,7 @@ body {
     font-family: Arial;
     margin: 0;
     background: #f5f6fa;
+    display: none;
 }
 
 /* Header */
@@ -310,7 +311,7 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
 
         userName = user.displayName || user.email;
-
+		document.body.style.display = "block";
         document.getElementById("userInfo").innerText = userName;
         document.getElementById("loginBtn").style.display = "none";
         document.getElementById("logoutBtn").style.display = "inline-block";
@@ -341,6 +342,8 @@ onAuthStateChanged(auth, (user) => {
         });
 
     } else {
+	
+		document.body.style.display = "none";
         document.getElementById("userInfo").innerText = "";
         document.getElementById("loginBtn").style.display = "inline-block";
         document.getElementById("logoutBtn").style.display = "none";
