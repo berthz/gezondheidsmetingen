@@ -127,7 +127,7 @@ table.compact tr:nth-child(even) {
 <body>
 
 <header>Gezondheidsmetingen</header>
-<button onclick="login()">Login met Google</button>
+<button id="loginBtn" onclick="login()">Login met Google</button>
 <div class="tabs">
     <button onclick="showTab('metingen')" id="tabBtnMetingen">Metingen</button>
     <button onclick="showTab('analyse')" id="tabBtnAnalyse">Analyse</button>
@@ -256,14 +256,15 @@ Selecteer metingen ▼
 
 </div>
 <script type="module">
-
+let currentUser = null;
+if (!currentUser) return;
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
-  // 👇 plak jouw config hier
+  //firebaseconfig
     apiKey: "AIzaSyBFSwN7sbLcHojfXQC-GHboUn-sMEX_ysg",
     authDomain: "gezondheidsmetingen.firebaseapp.com",
 	databaseURL: "https://gezondheidsmetingen-default-rtdb.europe-west1.firebasedatabase.app",
@@ -281,24 +282,28 @@ const provider = new GoogleAuthProvider();
 window.login = function(){
     signInWithPopup(auth, provider)
         .then(result => {
-            console.log("Ingelogd:", result.user);
+            console.log("Ingelogd:", result.user.email);
         })
         .catch(error => {
             console.error(error);
         });
 }
 onAuthStateChanged(auth, (user) => {
+currentUser = user;
+
     if (user) {
         console.log("User UID:", user.uid);
 
         // app tonen
         document.body.style.display = "block";
+		document.getElementById("loginBtn").style.display = "none";
 
     } else {
         console.log("Niet ingelogd");
 
         // app verbergen
         document.body.style.display = "none";
+		document.getElementById("loginBtn").style.display = "block";
 
         alert("Log eerst in om de app te gebruiken");
     }
