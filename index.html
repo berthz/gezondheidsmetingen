@@ -290,8 +290,17 @@ window.login = function(){
 onAuthStateChanged(auth, (user) => {
     if (user) {
         console.log("User UID:", user.uid);
+
+        // app tonen
+        document.body.style.display = "block";
+
     } else {
         console.log("Niet ingelogd");
+
+        // app verbergen
+        document.body.style.display = "none";
+
+        alert("Log eerst in om de app te gebruiken");
     }
 });
 // test of het werkt
