@@ -534,6 +534,19 @@ window.opslaan = function(){
 
 let chart;
 
+function movingAverage(data, windowSize = 3){
+    let result = [];
+
+    for(let i = 0; i < data.length; i++){
+        let start = Math.max(0, i - windowSize + 1);
+        let subset = data.slice(start, i + 1);
+
+        let avg = subset.reduce((a,b)=>a+b,0) / subset.length;
+        result.push(avg);
+    }
+
+    return result;
+}
 // enkele grafiek
 window.tekenGrafiek = function(){
     grafiekModus = "single";
@@ -544,6 +557,7 @@ window.tekenGrafiek = function(){
 
     let datums = data.map(d => formatDatum(d.datum));
     let waarden = data.map(d => d[keuze]);
+	let trend = movingAverage(waarden);
 
     if(chart) chart.destroy();
 
@@ -551,15 +565,26 @@ window.tekenGrafiek = function(){
         type: "line",
         data: {
             labels: datums,
-            datasets: [{
-                label: labels[index],
-                data: waarden,
-                borderColor: getKleur(keuze),
-                fill: false,
-                borderWidth: 2,
-                pointRadius: 2,
-                tension: 0.3
-            }]
+			datasets: [
+				{
+					label: labels[index],
+					data: waarden,
+					borderColor: getKleur(keuze),
+					fill: false,
+					borderWidth: 2,
+					pointRadius: 2,
+					tension: 0.3
+				},
+				{
+					label: "Trend",
+					data: trend,
+					borderColor: "black",
+					borderDash: [5,5],
+					fill: false,
+					pointRadius: 0,
+					tension: 0.3
+				}
+			]
         },
         options: {
             responsive: true,
