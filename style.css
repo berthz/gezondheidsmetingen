@@ -1,6 +1,5 @@
-<style>
 body {
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     margin: 0;
     background: #f5f6fa;
     display: none;
@@ -129,4 +128,3 @@ table.compact tr:nth-child(even) {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
 }
-</style>
