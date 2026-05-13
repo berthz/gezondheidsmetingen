@@ -1,0 +1,132 @@
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f5f6fa;
+    display: none;
+}
+
+/* Header */
+header {
+    background: #2c7be5;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+}
+
+/* Navigatie tabs */
+.tabs {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.tabs {
+    display: flex;
+    background: white;
+}
+.tabs button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.tabs button.active {
+    border-bottom: 3px solid #2c7be5;
+    font-weight: bold;
+    background: #f0f6ff;
+    color: #2c7be5;
+}
+.tabs button:hover {
+    background: #eef3ff;
+}
+/* Boxen met schaduw en content */
+.card {
+    background: white;
+    margin: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Grid */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+@media (max-width:600px){
+    .grid { grid-template-columns: 1fr; }
+}
+
+/* Inputs */
+input, select {
+    padding: 8px;
+    width: 100%;
+}
+
+/* Buttons */
+button {
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+}
+.primary { background:#2c7be5; color:white; }
+.danger { background:#dc3545; color:white; }
+.secondary { background:#ccc; }
+
+/* Tabs content */
+.tab { display:none; }
+
+canvas { margin-top:20px; }
+
+.tabs button.active {
+    border-bottom: 3px solid #2c7be5;
+    font-weight: bold;
+    background: #f0f6ff;
+}
+
+table.compact {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+    font-family: Calibri, Arial, sans-serif;
+}
+
+table.compact th,
+table.compact td {
+    border: 1px solid #ddd;
+    padding: 4px 6px;
+    text-align: center;
+}
+
+table.compact th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+table.compact tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.paginatie {
+    margin-top: 8px;
+    text-align: center;
+}
+
+.paginatie button {
+    padding: 4px 8px;
+    margin: 2px;
+    font-size: 12px;
+}
+.tab {
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
