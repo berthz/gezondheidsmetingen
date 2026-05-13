@@ -28,6 +28,11 @@ header {
 
 /* Tabs */
 .tabs {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.tabs {
     display: flex;
     background: white;
 }
@@ -36,12 +41,18 @@ header {
     padding: 12px;
     border: none;
     background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 .tabs button.active {
     border-bottom: 3px solid #2c7be5;
     font-weight: bold;
+    background: #f0f6ff;
+    color: #2c7be5;
 }
-
+.tabs button:hover {
+    background: #eef3ff;
+}
 /* Cards */
 .card {
     background: white;
@@ -121,6 +132,14 @@ table.compact tr:nth-child(even) {
     padding: 4px 8px;
     margin: 2px;
     font-size: 12px;
+}
+.tab {
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>
@@ -413,13 +432,26 @@ updateSelectieLabel();
 
 /* ================= TAB NAVIGATIE ================= */
 window.showTab = function(tab){
-    document.querySelectorAll(".tab").forEach(t => t.style.display = "none");
 
-    document.getElementById(tab).style.display="block";
+    // alle tabs verbergen
+    document.querySelectorAll(".tab").forEach(t => {
+        t.style.display = "none";
+    });
 
-    document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+    // juiste tab tonen
+    document.getElementById(tab).style.display = "block";
+
+    // actieve knop highlight
+    document.querySelectorAll(".tabs button").forEach(b=>{
+        b.classList.remove("active");
+    });
+
     document.getElementById("tabBtn"+capitalize(tab)).classList.add("active");
 
+    // 🔥 scroll naar boven (UX!)
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // 🔥 kleine delay voor betere rendering
     if(tab === "metingen"){
         setTimeout(() => toonTabel(), 50);
     }
