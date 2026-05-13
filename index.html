@@ -274,6 +274,10 @@ Selecteer metingen ▼
 	</div>
 	<div class="card">
 		<h3>Voortgang over tijd</h3>
+		<div class="card">
+			<h3>Inzichten</h3>
+			<div id="inzichten"></div>
+		</div>
 		<div style="width:100%; max-width:350px; height:220px; margin:auto;">
 			<canvas id="trendGrafiek"></canvas>
 		</div>
@@ -1287,6 +1291,7 @@ function updateDoelUI(){
 
     tekenDoelGrafiek(procent);
 	tekenTrendGrafiek();
+	updateInzichten();
 }
 
 let doelChart;
@@ -1534,6 +1539,53 @@ function berekenVoorspelling(data, totaal){
 
     document.getElementById("voorspelling").innerText =
         `Bij huidig tempo bereik je je doel rond: ${voorspeld}`;
+}
+
+function updateInzichten(){
+
+    let dagData = getDagData();
+    let metingen = getData();
+
+    if(dagData.length === 0) {
+        document.getElementById("inzichten").innerText = "Nog geen data";
+        return;
+    }
+
+    // 🔹 1. Gemiddeld kcal tekort
+    let totaal = dagData.reduce((sum,d)=>{
+        return sum + ((d.verschil || 0) * -1);
+    },0);
+
+    let gemiddeld = totaal / dagData.length;
+
+    // 🔹 2. Beste dag
+    let besteDag = dagData.reduce((best, d)=>{
+        let tekort = (d.verschil || 0) * -1;
+        if(!best || tekort > best.tekort){
+            return { datum: d.datum, tekort: tekort };
+        }
+        return best;
+    }, null);
+
+    // 🔹 3. Gewichtsverandering
+    let gewichtTekst = "Niet genoeg data";
+    if(metingen.length >= 2){
+        let sorted = metingen.sort((a,b)=> new Date(a.datum) - new Date(b.datum));
+        let eerste = sorted[0].gewicht;
+        let laatste = sorted[sorted.length - 1].gewicht;
+
+        if(eerste && laatste){
+            let verschil = laatste - eerste;
+            gewichtTekst = verschil.toFixed(1) + " kg";
+        }
+    }
+
+    // 🔹 Output
+    document.getElementById("inzichten").innerHTML = `
+        <p>📉 Gemiddeld tekort: <b>${Math.round(gemiddeld)} kcal/dag</b></p>
+        <p>🔥 Beste dag: <b>${formatDatum(besteDag.datum)}</b> (${Math.round(besteDag.tekort)} kcal)</p>
+        <p>⚖️ Gewichtsverandering: <b>${gewichtTekst}</b></p>
+    `;
 }
 
 window.addEventListener("online", () => {
