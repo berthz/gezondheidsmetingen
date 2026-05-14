@@ -10,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
@@ -195,9 +196,20 @@ Selecteer metingen ▼
 
 </div>
 <div class="bottom-nav">
-    <button onclick="showTab('metingen')" id="navMetingen">📊</button>
-    <button onclick="showTab('analyse')" id="navAnalyse">📈</button>
-    <button onclick="showTab('doel')" id="navDoel">🎯</button>
+    <button onclick="showTab('metingen')" id="navMetingen">
+        <i data-lucide="activity"></i>
+        <span>Metingen</span>
+    </button>
+
+    <button onclick="showTab('analyse')" id="navAnalyse">
+        <i data-lucide="line-chart"></i>
+        <span>Analyse</span>
+    </button>
+
+    <button onclick="showTab('doel')" id="navDoel">
+        <i data-lucide="target"></i>
+        <span>Doel</span>
+    </button>
 </div>
 <script type="module" src="javascript.js"></script>
 </body>

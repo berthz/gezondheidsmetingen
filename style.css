@@ -257,17 +257,25 @@ table.compact tr:nth-child(even) {
         padding: 8px 0;
         z-index: 1000;
     }
+	
+	.bottom-nav button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #666;
+	}
 
-    .bottom-nav button {
-        background: none;
-        border: none;
-        font-size: 20px;
-        color: #666;
-    }
+    .bottom-nav svg {
+    width: 22px;
+    height: 22px;
+	}
 
-    .bottom-nav button.active {
-        color: #2c7be5;
-    }
+	.bottom-nav button.active {
+		color: #2c7be5;
+	}
 }
 
 @media (max-width:600px){

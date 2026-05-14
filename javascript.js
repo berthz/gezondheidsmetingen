@@ -1472,3 +1472,5 @@ if ("serviceWorker" in navigator) {
         reg.update();
     });
 }
+
+lucide.createIcons();
