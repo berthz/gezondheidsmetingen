@@ -944,9 +944,7 @@ window.slaDagOp = function(){
     let stappen = parseInt(document.getElementById("stappen").value) || 0;
 
     // kcal behoefte uit metingen
-    let metingen = getData();
-    let laatste = metingen.length ? metingen[metingen.length - 1] : null;
-    let behoefte = laatste?.kcal || 2000;
+    let behoefte = getBehoefteVoorDatum(datum);
 
     // 👉 JOUW LOGICA (gecorrigeerd)
     let sportKcal = sport ? 450 : 0;
@@ -1085,9 +1083,7 @@ function toonDagTabel(){
 	let sportKcal = d.sport ? 450 : 0;
 
 	// haal behoefte op (laatste meting)
-	let metingen = getData();
-	let laatste = metingen.length ? metingen[metingen.length - 1] : null;
-	let behoefte = laatste ? laatste.kcal || 0 : 0;
+	let behoefte = getBehoefteVoorDatum(d.datum);
 
 	let totaalVerbruik = behoefte + stappenKcal + sportKcal;
 	let verschil = d.kcalIn - totaalVerbruik;
@@ -1428,9 +1424,7 @@ window.importExcel = function(file){
             // toevoegen / updaten
             dagData.forEach(entry => {
                 if(entry.datum){
-                    let metingen = getData();
-					let laatste = metingen.length ? metingen[metingen.length - 1] : null;
-					let behoefte = laatste?.kcal || 2000;
+                    let behoefte = getBehoefteVoorDatum(entry.datum);
 
 					let sportKcal = entry.sport ? 450 : 0;
 					let stappenKcal = (entry.stappen || 0) * 0.04;
@@ -1458,6 +1452,33 @@ window.importExcel = function(file){
     };
 
     reader.readAsArrayBuffer(file);
+}
+
+function getBehoefteVoorDatum(datum){
+
+    let metingen = getData();
+
+    if(metingen.length === 0) return 2000;
+
+    // sorteer oplopend
+    let sorted = metingen.sort((a,b) => new Date(a.datum) - new Date(b.datum));
+
+    let gekozen = null;
+
+    for(let m of sorted){
+        if(m.datum <= datum){
+            gekozen = m;
+        } else {
+            break;
+        }
+    }
+
+    // fallback → eerste meting
+    if(!gekozen){
+        gekozen = sorted[0];
+    }
+
+    return gekozen.kcal || 2000;
 }
 
 // Laatste code. Alles hieronder updated eventuele lokaal opgeslagen code.
