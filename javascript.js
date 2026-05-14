@@ -859,10 +859,10 @@ function toonTabel(){
         <tr>
             <td>${formatDatum(d.datum)}</td>
             <td>${d.gewicht ?? ""}</td>
-            <td>
-                <button onclick="bewerkenById(${d.id})">✏️</button>
-                <button onclick="verwijderById(${d.id})">🗑️</button>
-            </td>
+			<td>
+				<button class="editBtn" data-id="${d.id}">✏️</button>
+				<button class="deleteBtn" data-id="${d.id}">🗑️</button>
+			</td>
         </tr>
         `;
     });
@@ -873,17 +873,50 @@ function toonTabel(){
     html += `<div class="paginatie">`;
 	html += `Pagina ${paginaMetingen + 1} `;
 
-    if(paginaMetingen > 0){
-        html += `<button onclick="paginaMetingen--; toonTabel()">←</button>`;
-    }
+	if(paginaMetingen > 0){
+		html += `<button id="prevMetBtn">←</button>`;
+	}
 
-    if(eind < data.length){
-        html += `<button onclick="paginaMetingen++; toonTabel()">→</button>`;
-    }
+	if(eind < data.length){
+		html += `<button id="nextMetBtn">→</button>`;
+	}
 
     html += `</div>`;
 
     div.innerHTML = html;
+	
+	// 🔥 bewerken
+	document.querySelectorAll(".editBtn").forEach(btn => {
+		btn.addEventListener("click", () => {
+			let id = btn.dataset.id;
+			bewerkenById(id);
+		});
+	});
+
+	// 🔥 verwijderen
+	document.querySelectorAll(".deleteBtn").forEach(btn => {
+		btn.addEventListener("click", () => {
+			let id = btn.dataset.id;
+			verwijderById(id);
+		});
+	});
+
+	// 🔥 paginatie
+	let prevBtn = document.getElementById("prevMetBtn");
+	if(prevBtn){
+		prevBtn.addEventListener("click", () => {
+			paginaMetingen--;
+			toonTabel();
+		});
+	}
+
+	let nextBtn = document.getElementById("nextMetBtn");
+	if(nextBtn){
+		nextBtn.addEventListener("click", () => {
+			paginaMetingen++;
+			toonTabel();
+		});
+	}
 }
 
 window.bewerkenById = function(id){
@@ -1113,10 +1146,10 @@ function toonDagTabel(){
 				</small>
 			</td>
 
-			<td>
-				<button onclick="bewerkDag('${d.datum}')">✏️</button>
-				<button onclick="verwijderDag('${d.datum}')">🗑️</button>
-			</td>
+		<td>
+			<button class="editDagBtn" data-datum="${d.datum}">✏️</button>
+			<button class="deleteDagBtn" data-datum="${d.datum}">🗑️</button>
+		</td>
 		</tr>`;
     });
 
@@ -1137,21 +1170,36 @@ if(eind < data.length){
 
     div.innerHTML = html;
 	
-	let prevBtn = document.getElementById("prevDagBtn");
-if(prevBtn){
-    prevBtn.addEventListener("click", () => {
-        paginaDagen--;
-        toonDagTabel();
-    });
-}
+	// 🔥 dag bewerken
+	document.querySelectorAll(".editDagBtn").forEach(btn => {
+		btn.addEventListener("click", () => {
+			bewerkDag(btn.dataset.datum);
+		});
+	});
 
-let nextBtn = document.getElementById("nextDagBtn");
-if(nextBtn){
-    nextBtn.addEventListener("click", () => {
-        paginaDagen++;
-        toonDagTabel();
-    });
-}
+	// 🔥 dag verwijderen
+	document.querySelectorAll(".deleteDagBtn").forEach(btn => {
+		btn.addEventListener("click", () => {
+			verwijderDag(btn.dataset.datum);
+		});
+	});	
+		
+	
+	let prevBtn = document.getElementById("prevDagBtn");
+	if(prevBtn){
+		prevBtn.addEventListener("click", () => {
+			paginaDagen--;
+			toonDagTabel();
+		});
+	}
+
+	let nextBtn = document.getElementById("nextDagBtn");
+	if(nextBtn){
+		nextBtn.addEventListener("click", () => {
+			paginaDagen++;
+			toonDagTabel();
+		});
+	}
 }
 
 window.bewerkDag = function(datum){
