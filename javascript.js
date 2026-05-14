@@ -1363,10 +1363,16 @@ function updateInzichten(){
         let eerste = sorted[0].gewicht;
         let laatste = sorted[sorted.length - 1].gewicht;
 
-        if(eerste && laatste){
-            let verschil = laatste - eerste;
-            gewichtTekst = verschil.toFixed(1) + " kg";
-        }
+	if(eerste != null && laatste != null) {
+		let verschil = laatste - eerste;
+
+		let kleur = verschil > 0 ? "red" : "green";
+		let teken = verschil > 0 ? "+" : "";
+
+		gewichtTekst = `<span style="color:${kleur}">
+			${teken}${verschil.toFixed(1)} kg
+		</span>`;
+	}
     }
 
     // 🔹 Output
