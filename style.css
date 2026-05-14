@@ -1,102 +1,4 @@
-@media (max-width: 768px) {
-    body {
-        font-size: 18px; /* groter op mobiel */
-		padding-bottom: 70px; /* ruimte onderaan zodat content niet overlapt */
-    }
 
-    button {
-        padding: 14px;
-        font-size: 16px;
-        width: 100%;
-    }
-
-    input, select {
-        padding: 12px;
-        font-size: 16px;
-        width: 100%;
-    }
-
-    .veld {
-        margin-bottom: 12px;
-    }
-
-	
-	.tabs button {
-    flex: 1;
-    font-size: 14px;
-    padding: 10px;
-    border: none;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
-	}
-	.tabs button.active {
-		border-bottom: 3px solid #2c7be5;
-		font-weight: bold;
-		background: #f0f6ff;
-		color: #2c7be5;
-	}
-	.tabs button:hover {
-		background: #eef3ff;
-	}
-	
-    canvas {
-        height: 260px !important;
-    }	
-	
-    table.compact {
-    font-size: 14px;
-    border-collapse: collapse;
-    width: 100%;		
-	font-family: Calibri, Arial, sans-serif;
-    }
-
-    table.compact td, 
-    table.compact th {
-        padding: 8px;
-		border: 1px solid #ddd;
-		text-align: center;
-		background-color: #f2f2f2;
-		font-weight: bold;
-    }	
-		table.compact tr:nth-child(even) {
-		background-color: #fafafa;
-	}
-	    /* tabs boven verbergen */
-    .tabs {
-        display: none;
-    }
-
-    .bottom-nav {
-        display: flex;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-
-        background: white;
-        border-top: 1px solid #ddd;
-
-        justify-content: space-around;
-        padding: 8px 0;
-        z-index: 1000;
-    }
-
-    .bottom-nav button {
-        background: none;
-        border: none;
-        font-size: 20px;
-        color: #666;
-    }
-
-    .bottom-nav button.active {
-        color: #2c7be5;
-    }
-}
-
-@media (max-width:600px){
-    .grid { grid-template-columns: 1fr; }
-}
 
 body {
     font-family: Arial, sans-serif;
@@ -271,4 +173,103 @@ table.compact tr:nth-child(even) {
 
 .bottom-nav {
     display: none;
+}
+@media (max-width: 768px) {
+    body {
+        font-size: 18px; /* groter op mobiel */
+		padding-bottom: 70px; /* ruimte onderaan zodat content niet overlapt */
+    }
+
+    button {
+        padding: 14px;
+        font-size: 16px;
+        width: 100%;
+    }
+
+    input, select {
+        padding: 12px;
+        font-size: 16px;
+        width: 100%;
+    }
+
+    .veld {
+        margin-bottom: 12px;
+    }
+
+	
+	.tabs button {
+    flex: 1;
+    font-size: 14px;
+    padding: 10px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+	}
+	.tabs button.active {
+		border-bottom: 3px solid #2c7be5;
+		font-weight: bold;
+		background: #f0f6ff;
+		color: #2c7be5;
+	}
+	.tabs button:hover {
+		background: #eef3ff;
+	}
+	
+    canvas {
+        height: 260px !important;
+    }	
+	
+    table.compact {
+    font-size: 14px;
+    border-collapse: collapse;
+    width: 100%;		
+	font-family: Calibri, Arial, sans-serif;
+    }
+
+    table.compact td, 
+    table.compact th {
+        padding: 8px;
+		border: 1px solid #ddd;
+		text-align: center;
+		background-color: #f2f2f2;
+		font-weight: bold;
+    }	
+		table.compact tr:nth-child(even) {
+		background-color: #fafafa;
+	}
+	    /* tabs boven verbergen */
+    .tabs {
+        display: none;
+    }
+
+    .bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        background: white;
+        border-top: 1px solid #ddd;
+
+        justify-content: space-around;
+        padding: 8px 0;
+        z-index: 1000;
+    }
+
+    .bottom-nav button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #666;
+    }
+
+    .bottom-nav button.active {
+        color: #2c7be5;
+    }
+}
+
+@media (max-width:600px){
+    .grid { grid-template-columns: 1fr; }
 }
