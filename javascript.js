@@ -1122,7 +1122,8 @@ function toonDagTabel(){
 	let behoefte = getBehoefteVoorDatum(d.datum);
 
 	let totaalVerbruik = behoefte + stappenKcal + sportKcal;
-	let verschil = d.kcalIn - totaalVerbruik;
+	//let verschil = d.kcalIn - totaalVerbruik;
+	let verschil = d.verschil;
 		html += `
 		<tr>
 			<td>${formatDatum(d.datum)}</td>
@@ -1142,7 +1143,7 @@ function toonDagTabel(){
 			<td>
 				<small>
 				${behoefte} + ${stappenKcal} + ${sportKcal} = ${totaalVerbruik}<br>
-				${d.kcalIn} - ${totaalVerbruik} = <b style="color:${verschil > 0 ? 'green' : 'red'}">${verschil}</b>
+				${d.kcalIn} - ${totaalVerbruik} = <b style="color:${verschil > 0 ? 'red' : 'green'}">${verschil}</b>
 				</small>
 			</td>
 
