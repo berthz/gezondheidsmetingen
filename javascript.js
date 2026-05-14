@@ -177,6 +177,16 @@ window.showTab = function(tab){
     if(tab === "analyse"){
         setTimeout(() => tekenGrafiek(), 100);
     }
+	
+	// 🔥 mobile nav active state
+	document.querySelectorAll(".bottom-nav button").forEach(b=>{
+		b.classList.remove("active");
+	});
+
+	let navBtn = document.getElementById("nav"+capitalize(tab));
+	if(navBtn){
+		navBtn.classList.add("active");
+	}
 }
 
 function capitalize(s){

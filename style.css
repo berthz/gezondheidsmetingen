@@ -1,6 +1,7 @@
 @media (max-width: 768px) {
     body {
         font-size: 18px; /* groter op mobiel */
+		padding-bottom: 70px; /* ruimte onderaan zodat content niet overlapt */
     }
 
     button {
@@ -58,9 +59,39 @@
 		background-color: #f2f2f2;
 		font-weight: bold;
     }	
-	table.compact tr:nth-child(even) {
-    background-color: #fafafa;
-}
+		table.compact tr:nth-child(even) {
+		background-color: #fafafa;
+	}
+	    /* tabs boven verbergen */
+    .tabs {
+        display: none;
+    }
+
+    .bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        background: white;
+        border-top: 1px solid #ddd;
+
+        justify-content: space-around;
+        padding: 8px 0;
+        z-index: 1000;
+    }
+
+    .bottom-nav button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #666;
+    }
+
+    .bottom-nav button.active {
+        color: #2c7be5;
+    }
 }
 
 @media (max-width:600px){
@@ -234,4 +265,10 @@ table.compact tr:nth-child(even) {
 .info-icon:hover .tooltip {
     visibility: visible;
     opacity: 1;
+}
+
+/* ===== MOBILE BOTTOM NAV ===== */
+
+.bottom-nav {
+    display: none;
 }
