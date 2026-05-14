@@ -69,11 +69,57 @@ input, select {
 
 /* Buttons */
 button {
-    padding: 10px;
-    margin-top: 10px;
+    cursor: pointer;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: #2c7be5;
+    color: white;
+    font-size: 14px;
+    transition: all 0.15s ease;
 }
+button:hover {
+    background: #1a5fd1;
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(1px);
+    background: #174fb0;
+}
+button.editBtn,
+button.deleteBtn,
+button.editDagBtn,
+button.deleteDagBtn {
+    background: #f1f3f5;
+    color: #333;
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+button.editBtn:hover,
+button.deleteBtn:hover,
+button.editDagBtn:hover,
+button.deleteDagBtn:hover {
+    background: #e0e3e7;
+}
+.paginatie button {
+    background: #e9ecef;
+    color: #333;
+    padding: 6px 10px;
+}
+
+.paginatie button:hover {
+    background: #dfe3e7;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .primary { background:#2c7be5; color:white; }
 .danger { background:#dc3545; color:white; }
 .secondary { background:#ccc; }
