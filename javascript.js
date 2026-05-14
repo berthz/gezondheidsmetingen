@@ -1142,8 +1142,8 @@ function toonDagTabel(){
 
 			<td>
 				<small>
-				${behoefte} + ${stappenKcal} + ${sportKcal} = ${totaalVerbruik}<br>
-				${d.kcalIn} - ${totaalVerbruik} = <b style="color:${verschil > 0 ? 'red' : 'green'}">${verschil}</b>
+				${behoefte} + ${stappenKcal} + ${sportKcal} = ${Math.round(totaalVerbruik)}<br>
+				${d.kcalIn} - ${totaalVerbruik} = <b style="color:${verschil > 0 ? 'red' : 'green'}">${Math.round(verschil)}</b>
 				</small>
 			</td>
 
