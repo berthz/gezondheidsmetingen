@@ -91,9 +91,12 @@ onAuthStateChanged(auth, (user) => {
 //console.log("Firebase connected");
 
 let firebaseData = [];
-let paginaMetingen = 0;
+//let paginaMetingen = 0;
 const perPagina = 10;
-let paginaDagen = 0;
+//let paginaDagen = 0;
+
+window.paginaDagen = 0;
+window.paginaMetingen = 0;
 
 window.onload = function() {
 // invoervelden maken
