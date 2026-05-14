@@ -120,6 +120,22 @@ button:disabled {
     transform: none;
 }
 
+/* fix voor tab buttons */
+
+.tabs button {
+    background: white;
+    color: #333;
+}
+
+.tabs button:hover {
+    background: #eef3ff;
+    transform: none; /* voorkomt “springen” */
+}
+
+.tabs button:active {
+    transform: none;
+}
+
 .primary { background:#2c7be5; color:white; }
 .danger { background:#dc3545; color:white; }
 .secondary { background:#ccc; }
