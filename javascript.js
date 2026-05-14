@@ -1125,17 +1125,33 @@ function toonDagTabel(){
     html += `<div class="paginatie">`;
 	html += `Pagina ${paginaDagen + 1} `;
 
-    if(paginaDagen > 0){
-        html += `<button onclick="paginaDagen--; toonDagTabel()">←</button>`;
-    }
+if(paginaDagen > 0){
+    html += `<button id="prevDagBtn">←</button>`;
+}
 
-    if(eind < data.length){
-        html += `<button onclick="paginaDagen++; toonDagTabel()">→</button>`;
-    }
+if(eind < data.length){
+    html += `<button id="nextDagBtn">→</button>`;
+}
 
     html += `</div>`;
 
     div.innerHTML = html;
+	
+	let prevBtn = document.getElementById("prevDagBtn");
+if(prevBtn){
+    prevBtn.addEventListener("click", () => {
+        paginaDagen--;
+        toonDagTabel();
+    });
+}
+
+let nextBtn = document.getElementById("nextDagBtn");
+if(nextBtn){
+    nextBtn.addEventListener("click", () => {
+        paginaDagen++;
+        toonDagTabel();
+    });
+}
 }
 
 window.bewerkDag = function(datum){
