@@ -492,14 +492,42 @@ window.exportPDF = async function(){
     const doc = new jsPDF();
 
     let data = getData();
+	
 
     if(data.length === 0){
         alert("Geen data om te exporteren");
         return;
     }
-	let dagData = getDagData()
-    .sort((a,b) => new Date(a.datum) - new Date(b.datum))
-    .slice(-20); // laatste 20 dagen
+	let dagData = getDagData();
+
+// laatste maand
+let now = new Date();
+let maandGeleden = new Date();
+maandGeleden.setDate(now.getDate() - 30);
+
+dagData = dagData.filter(d => new Date(d.datum) >= maandGeleden);
+
+// sorteren
+dagData.sort((a,b) => new Date(a.datum) - new Date(b.datum));
+function getWeekNumber(d){
+    let date = new Date(d);
+    date.setHours(0,0,0,0);
+    date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+    let week1 = new Date(date.getFullYear(),0,4);
+    return 1 + Math.round(((date - week1)/86400000 - 3 + (week1.getDay()+6)%7)/7);
+}
+
+let weken = {};
+
+dagData.forEach(d=>{
+    let week = getWeekNumber(d.datum);
+
+    if(!weken[week]) weken[week] = [];
+    weken[week].push(d);
+});
+
+    //.sort((a,b) => new Date(a.datum) - new Date(b.datum))
+    //.slice(-20); // laatste 20 dagen
 	
     // ===== TITEL =====
     doc.setFontSize(18);
@@ -550,8 +578,8 @@ window.exportPDF = async function(){
         let labelIndex = velden.indexOf(key);
 
         let tempCanvas = document.createElement("canvas");
-		tempCanvas.width = 1200;
-		tempCanvas.height = 600;
+		tempCanvas.width = 1000;
+		tempCanvas.height = 500;
 		let ctx = tempCanvas.getContext("2d");
 		ctx.fillStyle = "#ffffff";
 		ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
@@ -589,7 +617,8 @@ window.exportPDF = async function(){
 
         await new Promise(r => setTimeout(r, 200));
 
-        let imgData = tempCanvas.toDataURL("image/png");
+        //let imgData = tempCanvas.toDataURL("image/png");
+		let imgData = tempCanvas.toDataURL("image/jpeg", 0.85);
 
         let posY = (grafiekIndex % 2 === 0) ? 30 : 170;
 
@@ -618,53 +647,130 @@ window.exportPDF = async function(){
     }
 	
 	// ===== STA AFDIAGRAM KCAL =====
-	doc.addPage();
+	for(let week in weken){
 
-	let barCanvas = document.createElement("canvas");
-	barCanvas.width = 1200;
-	barCanvas.height = 600;
+    doc.addPage();
 
-	new Chart(barCanvas, {
-		type: "bar",
-		data: {
-			labels: dagData.map(d => formatDatum(d.datum)),
-			datasets: [{
-				label: "Kcal inname",
-				data: dagData.map(d => d.kcalIn),
-				backgroundColor: "#2c7be5"
-			}]
-		},
-		options: {
-			animation: false,
-			responsive: false,
-			plugins: {
-				legend: { display: false }
-			},
-			scales: {
-				x: {
-					ticks: {
-						maxRotation: 45,
-						minRotation: 45
-					}
-				}
-			}
-		},
-		plugins: [{
-			id: 'whiteBackground',
-			beforeDraw: (chart) => {
-				const ctx = chart.ctx;
-				ctx.save();
-				ctx.globalCompositeOperation = 'destination-over';
-				ctx.fillStyle = '#ffffff';
-				ctx.fillRect(0, 0, chart.width, chart.height);
-				ctx.restore();
-			}
-		}]
-	});
+    let weekData = weken[week];
 
-	await new Promise(r => setTimeout(r, 200));
+    let labels = [];
+    let waarden = [];
+    let kleuren = [];
+    let patterns = [];
 
-	let barImg = barCanvas.toDataURL("image/png");
+    // maak alle 7 dagen van de week zichtbaar
+    let start = new Date(weekData[0].datum);
+    start.setDate(start.getDate() - start.getDay() + 1);
+
+    for(let i=0;i<7;i++){
+        let dag = new Date(start);
+        dag.setDate(start.getDate() + i);
+
+        let datumStr = dag.toISOString().split("T")[0];
+        let found = weekData.find(d => d.datum === datumStr);
+
+        labels.push(formatDatum(datumStr));
+
+        if(found){
+            waarden.push(found.kcalIn);
+            kleuren.push("#2c7be5");
+            patterns.push(null);
+        } else {
+            waarden.push(2000);
+            kleuren.push("#ff0000");
+            patterns.push(true);
+        }
+    }
+
+    let canvas = document.createElement("canvas");
+    canvas.width = 1000;
+    canvas.height = 500;
+
+    let ctx = canvas.getContext("2d");
+
+    // 🔥 patroon maken
+    function createStripePattern(ctx){
+        let pCanvas = document.createElement("canvas");
+        pCanvas.width = 10;
+        pCanvas.height = 10;
+
+        let pCtx = pCanvas.getContext("2d");
+        pCtx.fillStyle = "#ffffff";
+        pCtx.fillRect(0,0,10,10);
+
+        pCtx.strokeStyle = "red";
+        pCtx.lineWidth = 2;
+        pCtx.beginPath();
+        pCtx.moveTo(0,10);
+        pCtx.lineTo(10,0);
+        pCtx.stroke();
+
+        return ctx.createPattern(pCanvas, "repeat");
+    }
+
+    let stripe = createStripePattern(ctx);
+
+    let bgColors = waarden.map((v,i)=>{
+        return patterns[i] ? stripe : "#2c7be5";
+    });
+
+    new Chart(canvas, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                data: waarden,
+                backgroundColor: bgColors
+            }]
+        },
+        options: {
+            animation: false,
+            responsive: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: "#000",
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: "#000",
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [{
+            id: 'whiteBackground',
+            beforeDraw: (chart) => {
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        }]
+    });
+
+    await new Promise(r => setTimeout(r, 200));
+
+    let img = canvas.toDataURL("image/jpeg", 0.85);
+
+    // titel
+    doc.setFontSize(14);
+    doc.text(`Week ${week} - kcal inname`, 10, 20);
+
+    doc.addImage(img, "JPEG", 10, 30, 180, 90);
+}
 
 	// titel
 	doc.setFontSize(14);
