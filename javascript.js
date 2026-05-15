@@ -497,7 +497,10 @@ window.exportPDF = async function(){
         alert("Geen data om te exporteren");
         return;
     }
-
+	let dagData = getDagData()
+    .sort((a,b) => new Date(a.datum) - new Date(b.datum))
+    .slice(-20); // laatste 20 dagen
+	
     // ===== TITEL =====
     doc.setFontSize(18);
     doc.text("Gezondheidsrapport", 10, 10);
@@ -547,8 +550,8 @@ window.exportPDF = async function(){
         let labelIndex = velden.indexOf(key);
 
         let tempCanvas = document.createElement("canvas");
-		tempCanvas.width = 600;
-		tempCanvas.height = 300;
+		tempCanvas.width = 1200;
+		tempCanvas.height = 600;
 		let ctx = tempCanvas.getContext("2d");
 		ctx.fillStyle = "#ffffff";
 		ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
@@ -586,7 +589,7 @@ window.exportPDF = async function(){
 
         await new Promise(r => setTimeout(r, 200));
 
-        let imgData = tempCanvas.toDataURL("image/jpeg", 0.7);
+        let imgData = tempCanvas.toDataURL("image/png");
 
         let posY = (grafiekIndex % 2 === 0) ? 30 : 170;
 
@@ -613,6 +616,62 @@ window.exportPDF = async function(){
             doc.addPage();
         }
     }
+	
+	// ===== STA AFDIAGRAM KCAL =====
+	doc.addPage();
+
+	let barCanvas = document.createElement("canvas");
+	barCanvas.width = 1200;
+	barCanvas.height = 600;
+
+	new Chart(barCanvas, {
+		type: "bar",
+		data: {
+			labels: dagData.map(d => formatDatum(d.datum)),
+			datasets: [{
+				label: "Kcal inname",
+				data: dagData.map(d => d.kcalIn),
+				backgroundColor: "#2c7be5"
+			}]
+		},
+		options: {
+			animation: false,
+			responsive: false,
+			plugins: {
+				legend: { display: false }
+			},
+			scales: {
+				x: {
+					ticks: {
+						maxRotation: 45,
+						minRotation: 45
+					}
+				}
+			}
+		},
+		plugins: [{
+			id: 'whiteBackground',
+			beforeDraw: (chart) => {
+				const ctx = chart.ctx;
+				ctx.save();
+				ctx.globalCompositeOperation = 'destination-over';
+				ctx.fillStyle = '#ffffff';
+				ctx.fillRect(0, 0, chart.width, chart.height);
+				ctx.restore();
+			}
+		}]
+	});
+
+	await new Promise(r => setTimeout(r, 200));
+
+	let barImg = barCanvas.toDataURL("image/png");
+
+	// titel
+	doc.setFontSize(14);
+	doc.text("Kcal inname (laatste 20 dagen)", 10, 20);
+
+	// grafiek
+	doc.addImage(barImg, "PNG", 10, 30, 180, 90);
 
     doc.save(genereerBestandsnaam());
 }
