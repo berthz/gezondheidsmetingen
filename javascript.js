@@ -717,9 +717,24 @@ for(let week in weken){
         data: {
             labels: labels,
             datasets: [{
-                data: waarden,
-                backgroundColor: bgColors
-            }]
+			data: waarden,
+			backgroundColor: bgColors,
+
+			datalabels: {
+				anchor: 'end',
+				align: 'top',
+				color: '#000',
+				font: {
+					size: 14,
+					weight: 'bold'
+				},
+				formatter: function(value, context) {
+					// geen label tonen bij "fake" dagen
+					if(patterns[context.dataIndex]) return "";
+					return Math.round(value);
+				}
+			}
+		}]
         },
         options: {
             animation: false,
