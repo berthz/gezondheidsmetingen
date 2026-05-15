@@ -198,6 +198,7 @@ function capitalize(s){
 
 
 Chart.register(ChartDataLabels);
+Chart.register(window['chartjs-plugin-annotation']);
 
 let grafiekModus = "single"; // "single" of "combi"
 
