@@ -527,9 +527,7 @@ window.exportPDF = async function(){
         alert("Geen data om te exporteren");
         return;
     }
-	let dagData = getDagData()
-    .sort((a,b) => new Date(a.datum) - new Date(b.datum))
-    .slice(-20); // laatste 20 dagen
+
 	
     // ===== TITEL =====
     doc.setFontSize(18);
