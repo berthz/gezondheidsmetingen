@@ -659,6 +659,7 @@ for(let week in weken){
     let waarden = [];
     let patterns = [];
 	let verschillen = [];
+	let baselines = [];
 
     // start van week (maandag)
     let start = new Date(weekData[0].datum);
@@ -677,10 +678,12 @@ for(let week in weken){
 			waarden.push(found.kcalIn);
 			patterns.push(false);
 			verschillen.push(found.verschil);
+			baselines.push(found.totaalVerbruik);
 		} else {
 			waarden.push(2000);
 			patterns.push(true);
 			verschillen.push(null);
+			baselines.push(2000);
 		}
     }
 
@@ -757,7 +760,16 @@ for(let week in weken){
 				return `${kcal}\n(${diffText})`;
 			}
 			}
-		}]
+		},
+		    {
+        type: "line",
+        data: baselines,
+        borderColor: "black",
+        borderWidth: 2,
+        borderDash: [6,6],
+        pointRadius: 0,
+        tension: 0
+    }]
         },
         options: {
 		animation: false,
@@ -766,18 +778,6 @@ for(let week in weken){
 			legend: { display: false },
 			datalabels: {
 				clamp: true
-			},
-			annotation: {
-				annotations: {
-					lijn0: {
-						type: 'line',
-						yMin: 2000,
-						yMax: 2000,
-						borderColor: 'black',
-						borderWidth: 2,
-						borderDash: [5,5]
-					}
-				}
 			}
 		},
             scales: {
