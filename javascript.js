@@ -657,6 +657,7 @@ for(let week in weken){
     let labels = [];
     let waarden = [];
     let patterns = [];
+	let verschillen = [];
 
     // start van week (maandag)
     let start = new Date(weekData[0].datum);
@@ -672,12 +673,14 @@ for(let week in weken){
         labels.push(formatDatum(datumStr));
 
         if(found){
-            waarden.push(found.kcalIn);
-            patterns.push(false);
-        } else {
-            waarden.push(2000);
-            patterns.push(true);
-        }
+			waarden.push(found.kcalIn);
+			patterns.push(false);
+			verschillen.push(found.verschil);
+		} else {
+			waarden.push(2000);
+			patterns.push(true);
+			verschillen.push(null);
+		}
     }
 
     let canvas = document.createElement("canvas");
@@ -723,16 +726,35 @@ for(let week in weken){
 			datalabels: {
 				anchor: 'end',
 				align: 'top',
-				color: '#000',
+				color: function(context){
+				let i = context.dataIndex;
+
+				if(patterns[i]) return "#999";
+
+				let diff = verschillen[i];
+
+				if(diff > 0) return "red";   // teveel gegeten
+				return "green";              // tekort
+			},
 				font: {
 					size: 14,
 					weight: 'bold'
 				},
 				formatter: function(value, context) {
-					// geen label tonen bij "fake" dagen
-					if(patterns[context.dataIndex]) return "";
-					return Math.round(value);
-				}
+				let i = context.dataIndex;
+
+				if(patterns[i]) return "";
+
+				let kcal = Math.round(value);
+				let diff = verschillen[i];
+
+				if(diff == null) return kcal;
+
+				let teken = diff > 0 ? "+" : "";
+				let diffText = `${teken}${Math.round(diff)}`;
+
+				return `${kcal}\n(${diffText})`;
+			}
 			}
 		}]
         },
@@ -740,8 +762,11 @@ for(let week in weken){
             animation: false,
             responsive: false,
             plugins: {
-                legend: { display: false }
-            },
+					legend: { display: false },
+					datalabels: {
+						clamp: true
+					}
+				},
             scales: {
                 x: {
                     ticks: {
