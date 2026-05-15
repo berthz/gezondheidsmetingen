@@ -760,8 +760,13 @@ for(let week in weken){
 		}]
         },
         options: {
-            animation: false,
-            responsive: false,
+		animation: false,
+		responsive: false,
+		plugins: {
+			legend: { display: false },
+			datalabels: {
+				clamp: true
+			},
 			annotation: {
 				annotations: {
 					lijn0: {
@@ -773,13 +778,8 @@ for(let week in weken){
 						borderDash: [5,5]
 					}
 				}
-			},
-            plugins: {
-					legend: { display: false },
-					datalabels: {
-						clamp: true
-					}
-				},
+			}
+		},
             scales: {
 				x: {
 					ticks: {
