@@ -761,6 +761,18 @@ for(let week in weken){
         options: {
             animation: false,
             responsive: false,
+			annotation: {
+				annotations: {
+					lijn0: {
+						type: 'line',
+						yMin: 2000,
+						yMax: 2000,
+						borderColor: 'black',
+						borderWidth: 2,
+						borderDash: [5,5]
+					}
+				}
+			},
             plugins: {
 					legend: { display: false },
 					datalabels: {
@@ -768,19 +780,23 @@ for(let week in weken){
 					}
 				},
             scales: {
-                x: {
-                    ticks: {
-                        color: "#000",
-                        font: { size: 12 }
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: "#000",
-                        font: { size: 12 }
-                    }
-                }
-            }
+				x: {
+					ticks: {
+						color: "#000",
+						font: { size: 12 }
+					}
+				},
+				y: {
+					beginAtZero: true,
+
+					suggestedMax: Math.max(...waarden) + 500,
+
+					ticks: {
+						color: "#000",
+						font: { size: 12 }
+					}
+				}
+			}
         },
         plugins: [{
             id: 'whiteBackground',
