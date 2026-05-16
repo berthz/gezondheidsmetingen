@@ -1156,13 +1156,20 @@ window.slaDoelOp = function(){
 	if (!currentUser) return;
     let kg = parseFloat(document.getElementById("doelKg").value);
     if(isNaN(kg)) return alert("Vul kg in");
+	let startDatum = document.getElementById("doelStartDatum").value;
 
+	if(!startDatum){
+		alert("Kies een startdatum");
+		return;
+	}
+	
     let kcal = kg * 7000;
 
-    let doel = {
-        kg: kg,
-        kcal: kcal
-    };
+	let doel = {
+		kg: kg,
+		kcal: kcal,
+		startDatum: startDatum
+	};
 
     set(ref(db, "doel/" + currentUser.uid), doel);
 
@@ -1237,14 +1244,20 @@ function updateDoelUI(){
 
     let doel = getDoel();
     let data = getDagData();
+	if(doel.startDatum){
+    data = data.filter(d => d.datum >= doel.startDatum);
+	}
 	if(!doel || Object.keys(doel).length === 0) return;
 	if(!data) return;
 	
     if(doel.kg){
         document.getElementById("doelKg").value = doel.kg;
     }
-    if(!doel.kcal) return;
+		if(doel.startDatum){
+		document.getElementById("doelStartDatum").value = doel.startDatum;
+	}
 
+    if(!doel.kcal) return;
 	let totaal = data.reduce((sum,d)=>{
     return sum + ((d.verschil || 0) * -1);
 	},0);
@@ -1438,8 +1451,15 @@ window.verwijderDag = function(datum){
 
 function tekenTrendGrafiek(){
 
-    let data = getDagData()
-        .sort((a,b) => new Date(a.datum) - new Date(b.datum));
+	let data = getDagData();
+
+	let doel = getDoel();
+
+	if(doel.startDatum){
+		data = data.filter(d => d.datum >= doel.startDatum);
+	}
+
+	data = data.sort((a,b) => new Date(a.datum) - new Date(b.datum));
 
     if(data.length === 0) return;
 
@@ -1541,6 +1561,11 @@ function berekenVoorspelling(data, totaal){
 function updateInzichten(){
 
     let dagData = getDagData();
+	let doel = getDoel();
+
+	if(doel.startDatum){
+		dagData = dagData.filter(d => d.datum >= doel.startDatum);
+	}
     let metingen = getData();
 
     if(dagData.length === 0) {
