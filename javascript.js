@@ -357,7 +357,8 @@ window.tekenGrafiek = function(){
 				{
 					label: "Trend",
 					data: trend,
-					borderColor: "black",
+					hidden: true,
+					borderColor: "rgba(0,0,0,0.5)"
 					borderDash: [5,5],
 					fill: false,
 					pointRadius: 0,
@@ -367,6 +368,16 @@ window.tekenGrafiek = function(){
         },
         options: {
             responsive: true,
+			legend: {
+				labels: {
+					padding: 20,
+					boxWidth: 20,
+					font: 
+					{
+						size: 14
+					}
+				}
+			},
             plugins: {
                 datalabels: {
                     align: 'top',
