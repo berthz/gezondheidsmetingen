@@ -138,7 +138,7 @@ combiContainer.innerHTML += `
 				<input 
 					type="checkbox" 
 					value="${v}" 
-					checked
+					${i === 0 ? "checked" : ""}
 					onchange="updateSelectieLabel(); tekenCombi();"
 				>
 				${labels[i]}
