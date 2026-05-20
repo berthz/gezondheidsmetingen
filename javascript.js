@@ -411,7 +411,7 @@ window.tekenGrafiek = function(){
 }
 
 // gecombineerde grafiek
-function tekenCombi(){
+window.tekenCombi = function(){
     grafiekModus = "combi";
 
     let data = getData().sort((a,b) => new Date(a.datum) - new Date(b.datum));
@@ -482,8 +482,9 @@ function tekenCombi(){
                         pinch: { enabled: true },
                         mode: "x"
                     }
-                },
-				scales: {
+                }
+            },
+			scales: {
 				y: {
 					type: 'linear',
 					position: 'left'
@@ -496,7 +497,6 @@ function tekenCombi(){
 					}
 				}
 			}
-            }
         }
     });
 }
