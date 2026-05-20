@@ -358,7 +358,7 @@ window.tekenGrafiek = function(){
 					label: "Trend",
 					data: trend,
 					hidden: true,
-					borderColor: "rgba(0,0,0,0.5)"
+					borderColor: "rgba(0,0,0,0.5)",
 					borderDash: [5,5],
 					fill: false,
 					pointRadius: 0,
