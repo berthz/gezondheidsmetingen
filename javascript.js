@@ -1502,6 +1502,8 @@ function tekenTrendGrafiek(){
                 data: cumulatief,
                 borderColor: "#2c7be5",
                 fill: false,
+				pointRadius: 2,
+				borderWidth: 3,
                 tension: 0.3
             }]
         },
@@ -1509,7 +1511,13 @@ function tekenTrendGrafiek(){
 			responsive: true,
 			maintainAspectRatio: false,
 			plugins: {
-				legend: { display: false }
+				legend: { 
+					display: false 
+				},
+				// labels UIT voor trendgrafiek
+				datalabels: {
+					display: false
+				}
 			},
 			scales: {
 				y: {

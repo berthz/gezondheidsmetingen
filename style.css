@@ -231,6 +231,14 @@ table.compact tr:nth-child(even) {
     opacity: 1;
 }
 
+#trendGrafiekContainer {
+    width: 100%;
+    max-width: 350px;
+    height: 320px;
+    margin: auto;
+    position: relative;
+}
+
 /* ===== MOBILE BOTTOM NAV ===== */
 
 .bottom-nav {
@@ -279,7 +287,7 @@ table.compact tr:nth-child(even) {
 	}
 	
     canvas {
-        min-height: 260px !important;
+        min-height: 220px !important;
     }	
 	
     table.compact {
