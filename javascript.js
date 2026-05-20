@@ -998,7 +998,7 @@ window.toggleSelectie = function(){
     let btn = document.getElementById("selectieBtn");
 
     if(div.style.display === "none"){
-        div.style.display = "block";
+        div.style.display = "grid";
         btn.innerText = "Selecteer metingen ▲";
     } else {
         div.style.display = "none";
