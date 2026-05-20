@@ -133,12 +133,17 @@ velden.forEach((v,i) => {
 const combiContainer = document.getElementById("combiSelectie");
 
 velden.forEach((v,i) => {
-    combiContainer.innerHTML += `
-        <label>
-            <input type="checkbox" value="${v}" checked onchange="updateSelectieLabel()">
-            ${labels[i]}
-        </label><br>
-    `;
+combiContainer.innerHTML += `
+			<label class="combi-item">
+				<input 
+					type="checkbox" 
+					value="${v}" 
+					checked
+					onchange="updateSelectieLabel(); tekenCombi();"
+				>
+				${labels[i]}
+			</label>
+		`;
 });
 updateSelectieLabel();
 
