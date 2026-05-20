@@ -123,10 +123,10 @@ document.getElementById("doel").style.display="none";
 
 velden.forEach((v,i) => {
     grafiekContainer.innerHTML += `
-        <label>
+        <label class="grafiek-item">
             <input type="checkbox" value="${v}" checked>
             ${labels[i]}
-        </label><br>
+        </label>
     `;
 });
 

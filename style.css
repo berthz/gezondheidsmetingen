@@ -268,6 +268,40 @@ table.compact tr:nth-child(even) {
     border: 1px solid #2c7be5;
 }
 
+#grafiekSelectie {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.grafiek-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    background: #f8f9fa;
+    padding: 8px 10px;
+    border-radius: 8px;
+
+    font-size: 14px;
+    cursor: pointer;
+
+    transition: background 0.15s ease;
+}
+
+.grafiek-item:hover {
+    background: #eef3ff;
+}
+
+.grafiek-item input {
+    margin: 0;
+}
+
+.grafiek-item:has(input:checked) {
+    background: #dcecff;
+    border: 1px solid #2c7be5;
+}
 /* ===== MOBILE BOTTOM NAV ===== */
 
 .bottom-nav {
@@ -395,6 +429,14 @@ table.compact tr:nth-child(even) {
 	}
 
 	.combi-item {
+		font-size: 13px;
+		padding: 10px;
+	}
+	#grafiekSelectie {
+    grid-template-columns: 1fr 1fr;
+	}
+
+	.grafiek-item {
 		font-size: 13px;
 		padding: 10px;
 	}
