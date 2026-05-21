@@ -1173,6 +1173,7 @@ window.slaDoelOp = function(){
     let kg = parseFloat(document.getElementById("doelKg").value);
     if(isNaN(kg)) return alert("Vul kg in");
 	let startDatum = document.getElementById("doelStartDatum").value;
+	let sportKcalWaarde = parseFloat(document.getElementById("sportKcalWaarde").value) || 0;
 
 	if(!startDatum){
 		alert("Kies een startdatum");
@@ -1182,9 +1183,10 @@ window.slaDoelOp = function(){
     let kcal = kg * 7000;
 
 	let doel = {
-		kg: kg,
-		kcal: kcal,
-		startDatum: startDatum
+    kg: kg,
+    kcal: kcal,
+    startDatum: startDatum,
+    sportKcalWaarde: sportKcalWaarde
 	};
 
     set(ref(db, "doel/" + currentUser.uid), doel);
@@ -1214,7 +1216,13 @@ window.slaDagOp = function(){
     let behoefte = getBehoefteVoorDatum(datum);
 
     // 👉 JOUW LOGICA (gecorrigeerd)
-    let sportKcal = sport ? 450 : 0;
+    let doel = getDoel();
+
+	let sportKcalWaarde =
+		doel?.sportKcalWaarde || 0;
+
+	let sportKcal =
+		sport ? sportKcalWaarde : 0;
     let stappenKcal = stappen * 0.04;
 
 	// totaal verbruik = basis + activiteit
@@ -1271,6 +1279,10 @@ function updateDoelUI(){
     }
 		if(doel.startDatum){
 		document.getElementById("doelStartDatum").value = doel.startDatum;
+	}
+	
+	if(doel.sportKcalWaarde !== undefined){
+    document.getElementById("sportKcalWaarde").value = doel.sportKcalWaarde;
 	}
 
     if(!doel.kcal) return;
@@ -1353,7 +1365,13 @@ function toonDagTabel(){
 
     subset.forEach(d => {
 	let stappenKcal = Math.round(d.stappen * 0.04);
-	let sportKcal = d.sport ? 450 : 0;
+	let doel = getDoel();
+
+	let sportKcalWaarde =
+		doel?.sportKcalWaarde || 0;
+
+	let sportKcal =
+		d.sport ? sportKcalWaarde : 0;
 
 	// haal behoefte op (laatste meting)
 	let behoefte = getBehoefteVoorDatum(d.datum);
@@ -1757,7 +1775,13 @@ window.importExcel = function(file){
                 if(entry.datum){
                     let behoefte = getBehoefteVoorDatum(entry.datum);
 
-					let sportKcal = entry.sport ? 450 : 0;
+					let doel = getDoel();
+
+					let sportKcalWaarde =
+						doel?.sportKcalWaarde || 0;
+
+					let sportKcal =
+						entry.sport ? sportKcalWaarde : 0;
 					let stappenKcal = (entry.stappen || 0) * 0.04;
 
 					let totaalVerbruik = behoefte + sportKcal + stappenKcal;
