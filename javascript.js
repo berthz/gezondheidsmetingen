@@ -1284,7 +1284,12 @@ function updateDoelUI(){
 	if(doel.sportKcalWaarde !== undefined){
     document.getElementById("sportKcalWaarde").value = doel.sportKcalWaarde;
 	}
+	let sportWaarde =
+		doel.sportKcalWaarde || 450;
 
+	document.getElementById("sportLabel").innerText =
+		`Sport (±${sportWaarde} kcal)`;
+		
     if(!doel.kcal) return;
 	let totaal = data.reduce((sum,d)=>{
     return sum + ((d.verschil || 0) * -1);
