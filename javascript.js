@@ -1299,7 +1299,8 @@ function updateDoelUI(){
 	procent = Number(procent.toFixed(2));
 
     document.getElementById("doelInfo").innerText =
-        `Doel: ${doel.kg} kg (${doel.kcal} kcal tekort)`;
+    `Doel: ${doel.kg} kg (${doel.kcal} kcal tekort)
+	Vanaf: ${formatDatum(doel.startDatum)}`;
 
     document.getElementById("voortgangTekst").innerText =
 		`Voortgang: ${procent}% (${Math.round(totaal)} kcal)`;
@@ -1636,24 +1637,39 @@ function updateInzichten(){
         return best;
     }, null);
 
-    // 🔹 3. Gewichtsverandering
-    let gewichtTekst = "Niet genoeg data";
-    if(metingen.length >= 2){
-        let sorted = metingen.sort((a,b)=> new Date(a.datum) - new Date(b.datum));
-        let eerste = sorted[0].gewicht;
-        let laatste = sorted[sorted.length - 1].gewicht;
+	// 🔹 3. Gewichtsverandering
+	let gewichtTekst = "Niet genoeg data";
 
-	if(eerste != null && laatste != null) {
-		let verschil = laatste - eerste;
-
-		let kleur = verschil > 0 ? "red" : "green";
-		let teken = verschil > 0 ? "+" : "";
-
-		gewichtTekst = `<span style="color:${kleur}">
-			${teken}${verschil.toFixed(1)} kg
-		</span>`;
+	// 🔥 alleen metingen vanaf doelstartdatum
+	if(doel.startDatum){
+		metingen = metingen.filter(m =>
+			m.datum >= doel.startDatum
+		);
 	}
-    }
+
+	if(metingen.length >= 2){
+
+		let sorted = metingen.sort(
+			(a,b)=> new Date(a.datum) - new Date(b.datum)
+		);
+
+		let eerste = sorted[0]?.gewicht;
+		let laatste = sorted[sorted.length - 1]?.gewicht;
+
+		if(eerste != null && laatste != null){
+
+			let verschil = laatste - eerste;
+
+			let kleur = verschil > 0 ? "red" : "green";
+			let teken = verschil > 0 ? "+" : "";
+
+			gewichtTekst = `
+				<span style="color:${kleur}">
+					${teken}${verschil.toFixed(1)} kg
+				</span>
+			`;
+		}
+	}
 
     // 🔹 Output
     document.getElementById("inzichten").innerHTML = `
