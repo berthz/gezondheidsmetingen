@@ -1298,8 +1298,9 @@ function updateDoelUI(){
     let procent = Math.min((totaal / doel.kcal) * 100, 100);
 	procent = Number(procent.toFixed(2));
 
-    document.getElementById("doelInfo").innerText =
-        `Doel: ${doel.kg} kg (${doel.kcal} kcal tekort)`;
+document.getElementById("doelInfo").innerText =
+    `Doel: ${doel.kg} kg (${doel.kcal} kcal tekort)
+	Vanaf: ${formatDatum(doel.startDatum)}`;
 
     document.getElementById("voortgangTekst").innerText =
 		`Voortgang: ${procent}% (${Math.round(totaal)} kcal)`;
@@ -1638,22 +1639,55 @@ function updateInzichten(){
 
     // 🔹 3. Gewichtsverandering
     let gewichtTekst = "Niet genoeg data";
-    if(metingen.length >= 2){
-        let sorted = metingen.sort((a,b)=> new Date(a.datum) - new Date(b.datum));
-        let eerste = sorted[0].gewicht;
-        let laatste = sorted[sorted.length - 1].gewicht;
+	if(metingen.length >= 2){
 
-	if(eerste != null && laatste != null) {
+		// 🔥 alleen metingen vanaf doelstart
+		if(doel.startDatum){
+			metingen = metingen.filter(m =>
+				m.datum >= doel.startDatum
+			);
+		}
+
+		let sorted = metingen.sort(
+			(a,b)=> new Date(a.datum) - new Date(b.datum)
+		);
+
+		let eersteMeting = sorted.find(m => m.gewicht != null);
+	let laatsteMeting = [...sorted]
+		.reverse()
+		.find(m => m.gewicht != null);
+
+	if(!eersteMeting || !laatsteMeting){
+		gewichtTekst = "Niet genoeg data";
+	} else {
+
+		let eerste = eersteMeting.gewicht;
+		let laatste = laatsteMeting.gewicht;
+
 		let verschil = laatste - eerste;
 
 		let kleur = verschil > 0 ? "red" : "green";
 		let teken = verschil > 0 ? "+" : "";
 
-		gewichtTekst = `<span style="color:${kleur}">
-			${teken}${verschil.toFixed(1)} kg
-		</span>`;
+		gewichtTekst = `
+			<span style="color:${kleur}">
+				${teken}${verschil.toFixed(1)} kg
+			</span>
+		`;
 	}
-    }
+		let laatste = sorted[sorted.length - 1]?.gewicht;
+
+		if(eerste != null && laatste != null) {
+			let verschil = laatste - eerste;
+
+			let kleur = verschil > 0 ? "red" : "green";
+			let teken = verschil > 0 ? "+" : "";
+
+			gewichtTekst = `<span style="color:${kleur}">
+				${teken}${verschil.toFixed(1)} kg
+			</span>`;
+		}
+		}
 
     // 🔹 Output
     document.getElementById("inzichten").innerHTML = `
