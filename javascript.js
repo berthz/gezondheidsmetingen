@@ -1671,12 +1671,22 @@ function updateInzichten(){
 		}
 	}
 
-    // 🔹 Output
-    document.getElementById("inzichten").innerHTML = `
-        <p>📉 Gemiddeld tekort: <b>${Math.round(gemiddeld)} kcal/dag</b></p>
-        <p>🔥 Beste dag: <b>${formatDatum(besteDag.datum)}</b> (${Math.round(besteDag.tekort)} kcal)</p>
-        <p>⚖️ Gewichtsverandering: <b>${gewichtTekst}</b></p>
-    `;
+document.getElementById("inzichten").innerHTML = `
+    <p>🎯 Doel gestart op: <b>${formatDatum(doel.startDatum)}</b></p>
+
+    <p>📉 Gemiddeld tekort: 
+        <b>${Math.round(gemiddeld)} kcal/dag</b>
+    </p>
+
+    <p>🔥 Beste dag: 
+        <b>${formatDatum(besteDag.datum)}</b> 
+        (${Math.round(besteDag.tekort)} kcal)
+    </p>
+
+    <p>⚖️ Gewichtsverandering: 
+        <b>${gewichtTekst}</b>
+    </p>
+`;
 }
 
 window.exportExcel = function(){
