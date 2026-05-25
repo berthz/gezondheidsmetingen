@@ -1303,7 +1303,7 @@ function updateDoelUI(){
 	Vanaf: ${formatDatum(doel.startDatum)}`;
 
     document.getElementById("voortgangTekst").innerText =
-		`Voortgang: ${procent}% (${Math.round(totaal)} kcal)`;
+    `Voortgang sinds ${formatDatum(doel.startDatum)}: ${procent}% (${Math.round(totaal)} kcal)`;
 
     tekenDoelGrafiek(procent);
 	tekenTrendGrafiek();
