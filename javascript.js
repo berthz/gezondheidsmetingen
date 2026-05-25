@@ -1867,6 +1867,8 @@ function getBehoefteVoorDatum(datum){
     return gekozen.kcal || 2000;
 }
 
+
+
 // Laatste code. Alles hieronder updated eventuele lokaal opgeslagen code.
 
 window.addEventListener("online", () => {
@@ -1879,5 +1881,46 @@ if ("serviceWorker" in navigator) {
         reg.update();
     });
 }
+
+document.addEventListener("visibilitychange", () => {
+
+    if(document.visibilityState === "visible"){
+
+        console.log("App opnieuw zichtbaar");
+
+        // 🔥 UI opnieuw opbouwen
+        toonLijst();
+        toonTabel();
+        toonDagTabel();
+
+        updateDoelUI();
+        updateInzichten();
+
+        // 🔥 actieve grafiek opnieuw tekenen
+        if(grafiekModus === "single"){
+            tekenGrafiek();
+        } else {
+            tekenCombi();
+        }
+    }
+});
+
+window.addEventListener("pageshow", () => {
+
+    console.log("Pagina opnieuw zichtbaar");
+
+    toonLijst();
+    toonTabel();
+    toonDagTabel();
+
+    updateDoelUI();
+    updateInzichten();
+
+    if(grafiekModus === "single"){
+        tekenGrafiek();
+    } else {
+        tekenCombi();
+    }
+});
 
 lucide.createIcons();
