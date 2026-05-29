@@ -1026,9 +1026,18 @@ function bewerken(index){
 
     document.getElementById("datum").value = item.datum;
 
-    velden.forEach(v => {
-        document.getElementById(v).value = item[v];
-    });
+	velden.forEach(v => {
+
+		if(v === "vetmassa" || v === "watermassa"){
+			return;
+		}
+
+		let el = document.getElementById(v);
+
+		if(el){
+			el.value = item[v] ?? "";
+		}
+	});
 
     // 🔑 sla ID op (niet index!)
     localStorage.setItem("editIndex", String(item.id));
@@ -1050,9 +1059,18 @@ toonLijst();
 window.resetForm = function(){
     document.getElementById("datum").value = "";
 
-    velden.forEach(v => {
-        document.getElementById(v).value = "";
-    });
+	velden.forEach(v => {
+
+		if(v === "vetmassa" || v === "watermassa"){
+			return;
+		}
+
+		let el = document.getElementById(v);
+
+		if(el){
+			el.value = "";
+		}
+	});
 }
 
 window.toggleGrafiek = function(){
@@ -1222,9 +1240,18 @@ window.bewerkenById = function(id){
 
     document.getElementById("datum").value = item.datum;
 
-    velden.forEach(v => {
-        document.getElementById(v).value = item[v] ?? "";
-    });
+	velden.forEach(v => {
+
+		if(v === "vetmassa" || v === "watermassa"){
+			return;
+		}
+
+		let el = document.getElementById(v);
+
+		if(el){
+			el.value = item[v] ?? "";
+		}
+	});
 
     localStorage.setItem("editIndex", String(item.id));
 }
