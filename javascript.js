@@ -102,6 +102,11 @@ window.onload = function() {
 // invoervelden maken
 const container = document.getElementById("inputs");
 velden.forEach((v,i) => {
+
+    if(v === "vetmassa" || v === "watermassa"){
+        return;
+    }
+
     container.innerHTML += `
     <div class="veld">
         <label class="titel">${labels[i]}</label>
@@ -208,15 +213,37 @@ Chart.register(window['chartjs-plugin-annotation']);
 let grafiekModus = "single"; // "single" of "combi"
 
 const velden = [
-"gewicht","bmi","lichaamsvrij_vet","waterpercentage","spiermassa",
-"spierscore","botmassa","kcal","kj","leeftijd",
-"visceraal_vet","buikomvang"
+"gewicht",
+"bmi",
+"lichaamsvrij_vet",
+"vetmassa",
+"waterpercentage",
+"watermassa",
+"spiermassa",
+"spierscore",
+"botmassa",
+"kcal",
+"kj",
+"leeftijd",
+"visceraal_vet",
+"buikomvang"
 ];
 
-const labels = [
-"Gewicht","BMI","Lichaamsvrij vet","Waterpercentage","Spiermassa",
-"Spierscore","Botmassa","Kcal behoefte","KJ behoefte","Leeftijd",
-"Viscerale vetscore","Buikomvang"
+const velden = [
+"gewicht",
+"bmi",
+"lichaamsvrij_vet",
+"vetmassa",
+"waterpercentage",
+"watermassa",
+"spiermassa",
+"spierscore",
+"botmassa",
+"kcal",
+"kj",
+"leeftijd",
+"visceraal_vet",
+"buikomvang"
 ];
 
 
@@ -273,9 +300,31 @@ window.opslaan = function(){
     };
 
     velden.forEach(v => {
-        let value = document.getElementById(v).value;
-		entry[v] = value === "" ? null : parseFloat(value);
-    });
+
+    if(v === "vetmassa" || v === "watermassa"){
+        return;
+    }
+
+    let value = document.getElementById(v).value;
+    entry[v] = value === "" ? null : parseFloat(value);
+	});
+
+	// afgeleide waarden berekenen
+	if(entry.gewicht && entry.lichaamsvrij_vet != null){
+		entry.vetmassa =
+			Number(
+				(entry.gewicht * entry.lichaamsvrij_vet / 100)
+				.toFixed(1)
+			);
+	}
+
+	if(entry.gewicht && entry.waterpercentage != null){
+		entry.watermassa =
+			Number(
+				(entry.gewicht * entry.waterpercentage / 100)
+				.toFixed(1)
+			);
+}
 
     let editIndex = localStorage.getItem("editIndex");
 
@@ -333,6 +382,28 @@ function movingAverage(data, windowSize = 3){
 }
 // enkele grafiek
 window.tekenGrafiek = function(){
+	
+	function getWaarde(d, veld){
+
+    if(veld === "vetmassa"){
+        if(d.vetmassa != null) return d.vetmassa;
+
+        return d.gewicht && d.lichaamsvrij_vet != null
+            ? Number((d.gewicht * d.lichaamsvrij_vet / 100).toFixed(1))
+            : null;
+    }
+
+    if(veld === "watermassa"){
+        if(d.watermassa != null) return d.watermassa;
+
+        return d.gewicht && d.waterpercentage != null
+            ? Number((d.gewicht * d.waterpercentage / 100).toFixed(1))
+            : null;
+    }
+
+    return d[veld];
+	}
+
     grafiekModus = "single";
 
     let data = getData().sort((a,b) => new Date(a.datum) - new Date(b.datum));
@@ -340,7 +411,7 @@ window.tekenGrafiek = function(){
     let index = velden.indexOf(keuze);
 
     let datums = data.map(d => formatDatum(d.datum));
-    let waarden = data.map(d => d[keuze]);
+    let waarden = data.map(d => getWaarde(d, keuze));
 	let trend = movingAverage(waarden);
 
     if(chart) chart.destroy();
@@ -432,7 +503,7 @@ window.tekenCombi = function(){
 
         return {
 				label: labels[i],
-				data: data.map(d => d[v]),
+				data: data.map(d => getWaarde(d, v)),
 				borderColor: getKleur(v),
 				fill: false,
 				borderWidth: 2,
@@ -864,6 +935,8 @@ function getKleur(veld){
         bmi: "purple",
         lichaamsvrij_vet: "orange",
         waterpercentage: "blue",
+		vetmassa: "#ff6600",
+		watermassa: "#0088ff",
         spiermassa: "green",
         spierscore: "darkgreen",
         botmassa: "brown",
@@ -1707,7 +1780,9 @@ window.exportExcel = function(){
     gewicht: m.gewicht,
     bmi: m.bmi,
     lichaamsvrij_vet: m.lichaamsvrij_vet,
-    waterpercentage: m.waterpercentage,
+	vetmassa: m.vetmassa,
+	waterpercentage: m.waterpercentage,
+	watermassa: m.watermassa,
     spiermassa: m.spiermassa,
     spierscore: m.spierscore,
     botmassa: m.botmassa,
