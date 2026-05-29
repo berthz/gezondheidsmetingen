@@ -229,21 +229,21 @@ const velden = [
 "buikomvang"
 ];
 
-const velden = [
-"gewicht",
-"bmi",
-"lichaamsvrij_vet",
-"vetmassa",
-"waterpercentage",
-"watermassa",
-"spiermassa",
-"spierscore",
-"botmassa",
-"kcal",
-"kj",
-"leeftijd",
-"visceraal_vet",
-"buikomvang"
+const labels = [
+"Gewicht",
+"BMI",
+"Vetpercentage",
+"Vetmassa (kg)",
+"Waterpercentage",
+"Watermassa (kg)",
+"Spiermassa",
+"Spierscore",
+"Botmassa",
+"Kcal behoefte",
+"KJ behoefte",
+"Leeftijd",
+"Viscerale vetscore",
+"Buikomvang"
 ];
 
 
