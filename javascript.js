@@ -103,9 +103,13 @@ window.onload = function() {
 const container = document.getElementById("inputs");
 velden.forEach((v,i) => {
 
-    if(v === "vetmassa" || v === "watermassa"){
-        return;
-    }
+if(
+    v === "vetmassa" ||
+    v === "watermassa" ||
+    v === "vetvrije_massa"
+){
+    return;
+}
 
     container.innerHTML += `
     <div class="veld">
@@ -217,6 +221,7 @@ const velden = [
 "bmi",
 "lichaamsvrij_vet",
 "vetmassa",
+"vetvrije_massa",
 "waterpercentage",
 "watermassa",
 "spiermassa",
@@ -234,6 +239,7 @@ const labels = [
 "BMI",
 "Vetpercentage",
 "Vetmassa (kg)",
+"Vetvrije massa (kg)",
 "Waterpercentage",
 "Watermassa (kg)",
 "Spiermassa",
@@ -301,9 +307,13 @@ window.opslaan = function(){
 
     velden.forEach(v => {
 
-    if(v === "vetmassa" || v === "watermassa"){
-        return;
-    }
+	if(
+		v === "vetmassa" ||
+		v === "watermassa" ||
+		v === "vetvrije_massa"
+	){
+		return;
+	}
 
     let value = document.getElementById(v).value;
     entry[v] = value === "" ? null : parseFloat(value);
@@ -314,6 +324,14 @@ window.opslaan = function(){
 		entry.vetmassa =
 			Number(
 				(entry.gewicht * entry.lichaamsvrij_vet / 100)
+				.toFixed(1)
+			);
+	}
+
+	if(entry.gewicht && entry.vetmassa != null){
+		entry.vetvrije_massa =
+			Number(
+				(entry.gewicht - entry.vetmassa)
 				.toFixed(1)
 			);
 	}
@@ -392,6 +410,24 @@ window.tekenGrafiek = function(){
             ? Number((d.gewicht * d.lichaamsvrij_vet / 100).toFixed(1))
             : null;
     }
+	
+	if(veld === "vetvrije_massa"){
+
+    if(d.vetvrije_massa != null){
+        return d.vetvrije_massa;
+    }
+
+    if(d.gewicht && d.lichaamsvrij_vet != null){
+        return Number(
+            (
+                d.gewicht -
+                (d.gewicht * d.lichaamsvrij_vet / 100)
+            ).toFixed(1)
+        );
+    }
+
+    return null;
+	}
 
     if(veld === "watermassa"){
         if(d.watermassa != null) return d.watermassa;
@@ -936,6 +972,7 @@ function getKleur(veld){
         lichaamsvrij_vet: "orange",
         waterpercentage: "blue",
 		vetmassa: "#ff6600",
+		vetvrije_massa: "#228B22",
 		watermassa: "#0088ff",
         spiermassa: "green",
         spierscore: "darkgreen",
@@ -1028,9 +1065,13 @@ function bewerken(index){
 
 	velden.forEach(v => {
 
-		if(v === "vetmassa" || v === "watermassa"){
-			return;
-		}
+	if(
+		v === "vetmassa" ||
+		v === "watermassa" ||
+		v === "vetvrije_massa"
+	){
+		return;
+	}
 
 		let el = document.getElementById(v);
 
@@ -1061,9 +1102,13 @@ window.resetForm = function(){
 
 	velden.forEach(v => {
 
-		if(v === "vetmassa" || v === "watermassa"){
-			return;
-		}
+	if(
+		v === "vetmassa" ||
+		v === "watermassa" ||
+		v === "vetvrije_massa"
+	){
+		return;
+	}
 
 		let el = document.getElementById(v);
 
@@ -1242,9 +1287,13 @@ window.bewerkenById = function(id){
 
 	velden.forEach(v => {
 
-		if(v === "vetmassa" || v === "watermassa"){
-			return;
-		}
+	if(
+		v === "vetmassa" ||
+		v === "watermassa" ||
+		v === "vetvrije_massa"
+	){
+		return;
+	}
 
 		let el = document.getElementById(v);
 
