@@ -398,9 +398,7 @@ function movingAverage(data, windowSize = 3){
 
     return result;
 }
-// enkele grafiek
-window.tekenGrafiek = function(){
-	
+
 	function getWaarde(d, veld){
 
     if(veld === "vetmassa"){
@@ -439,6 +437,10 @@ window.tekenGrafiek = function(){
 
     return d[veld];
 	}
+	
+// enkele grafiek
+window.tekenGrafiek = function(){
+	
 
     grafiekModus = "single";
 
